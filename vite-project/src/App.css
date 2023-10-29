@@ -1,36 +1,74 @@
+@import url(https://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+
 #root {
   max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0 auto;
+  height: 100vh;
   padding: 2rem;
   text-align: center;
 }
 
+body,
+html {
+	font-family: "Droid Sans", arial, verdana, sans-serif;
+	font-weight: 700;
+	color: #ff6;
+  background: black url("https://s3.amazonaws.com/csstarwars/background.png");
+	overflow: hidden;
+}
+
+.title {
+  text-align: center;
+  line-height: 0.8em;
+  font-size: 4em;
+	letter-spacing: -0.05em;
+	color: #000;
+	text-shadow: -2px -2px 0 #ff6, 2px -2px 0 #ff6, -2px 2px 0 #ff6, 2px 2px 0 #ff6;
+}
+
+.subtitle {
+  display: inline;
+  color: #ff6;
+  text-shadow: none;
+}
+
 .cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 225px);
-  width: 100%;
-  max-width: 1000px;
-  justify-content: center;
-  justify-items: center;
-  column-gap: 30px;
-  row-gap: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  height: calc(100vh - 270px);
+  overflow-x: auto;
+  margin: 20px 0 20px 0;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 16px rgba(90, 17, 122, 0.63);
 }
 
 .card {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 225px;
   min-height: 300px;
   margin-bottom: 20px;
   border-radius: 5px;
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
-  transition: 0.2s;
+  box-shadow: 0px 0px 8px rgba(218, 202, 82, 0.509);
+  transition: 0.3s;
 }
 
 .card:hover {
-  box-shadow: 4px 8px 16px rgba(91, 17, 122, 0.2);
+  box-shadow: 0px 0px 16px rgba(90, 17, 122, 0.63);
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: perspective(180px) rotateX(40deg);
 }
 
 .card-name {
