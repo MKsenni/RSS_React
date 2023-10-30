@@ -3,7 +3,6 @@ import './App.css';
 import React from 'react';
 import { Description, getPeople, searchPeople } from './api/actions';
 import { Spinner } from './components/spinner';
-import { ErrorBoundary } from 'react-error-boundary';
 
 type AppProps = Record<string, never>;
 
@@ -75,11 +74,10 @@ class App extends React.Component<AppProps, AppState> {
             />
             <input type="submit" value="search" />
           </form>
-          <ErrorBoundary fallback={<p>Something went wrong</p>} />
           <button
             onClick={(event) => {
               event.preventDefault();
-              throw new Error();
+              throw new Error('Error for example');
             }}
           >
             Error Boundary
@@ -90,7 +88,6 @@ class App extends React.Component<AppProps, AppState> {
         ) : (
           <section>
             <div className="cards">
-              <ErrorBoundary fallback={<p>Something went wrong</p>} />
               {this.state.searchResult &&
                 this.state.searchResult?.map((person, index) => {
                   return (
