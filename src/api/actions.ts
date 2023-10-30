@@ -25,8 +25,6 @@ export const searchPeople = async (searchWord: string) => {
       `${baseUrl}/${path.people}/?search=${searchWord}`
     );
     const person: People = await response.json();
-    console.log(person.results);
-
     return person.results;
   } catch (error) {
     console.log('Fetch is Faild');

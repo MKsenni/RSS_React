@@ -3,6 +3,7 @@ import './App.css';
 import React from 'react';
 import { Description, getPeople, searchPeople } from './api/actions';
 import { Spinner } from './components/spinner';
+import { ErrorBoundary } from 'react-error-boundary';
 
 type AppProps = Record<string, never>;
 
@@ -36,15 +37,12 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ isLoading: false });
   }
 
-  componentDidUpdate(/*prevProps: Readonly<AppProps>, prevState: Readonly<AppState>, snapshot?: any*/): void {}
-
   componentWillUnmount(): void {
     localStorage.setItem('searchWord', this.state.searchWord);
   }
 
-  async startPage() {
+  async startPage(): Promise<void> {
     const allPeople = await getPeople();
-    console.log(allPeople);
     this.setState({ searchResult: allPeople });
   }
 
@@ -53,7 +51,7 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ searchWord });
   }
 
-  async handleSearch(event: React.FormEvent<HTMLFormElement>) {
+  async handleSearch(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const searchWord: string = this.state.searchWord.toUpperCase().trim();
     this.setState({ isLoading: true });
@@ -77,12 +75,22 @@ class App extends React.Component<AppProps, AppState> {
             />
             <input type="submit" value="search" />
           </form>
+          <ErrorBoundary fallback={<p>Something went wrong</p>} />
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+              throw new Error();
+            }}
+          >
+            Error Boundary
+          </button>
         </section>
         {this.state.isLoading ? (
           <Spinner />
         ) : (
           <section>
             <div className="cards">
+              <ErrorBoundary fallback={<p>Something went wrong</p>} />
               {this.state.searchResult &&
                 this.state.searchResult?.map((person, index) => {
                   return (
