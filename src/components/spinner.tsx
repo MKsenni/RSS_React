@@ -7,7 +7,7 @@ export class Spinner extends React.Component {
       <>
         <img
           width={60}
-          src="/public/spinner.gif"
+          src="/src/assets/spinner.gif"
           alt="loading"
           style={{ margin: '20px' }}
         />
