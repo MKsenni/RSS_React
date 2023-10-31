@@ -3,6 +3,7 @@ import './App.css';
 import React from 'react';
 import { Description, getPeople, searchPeople } from './api/actions';
 import { Spinner } from './components/spinner';
+import Card from './components/Card';
 
 type AppProps = Record<string, never>;
 
@@ -94,23 +95,7 @@ class App extends React.Component<AppProps, AppState> {
               {this.state.searchResult &&
                 (this.state.searchResult.length >= 1 ? (
                   this.state.searchResult?.map((person, index) => {
-                    return (
-                      <div className="card" key={index}>
-                        <div className="text-container">
-                          <span className="card-name">Name: {person.name}</span>
-                          <span className="card-gender">
-                            Gender: {person.gender}
-                          </span>
-                          <span className="card-birth">
-                            Year: {person.birth_year}
-                          </span>
-                          <span className="card-mass">Mass: {person.mass}</span>
-                          <span className="card-height">
-                            Height: {person.height}
-                          </span>
-                        </div>
-                      </div>
-                    );
+                    return <Card person={person} key={index} />;
                   })
                 ) : (
                   <h2>No Results</h2>
