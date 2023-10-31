@@ -39,6 +39,12 @@ html {
   text-shadow: none;
 }
 
+.search-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .cards {
   display: flex;
   flex-wrap: wrap;

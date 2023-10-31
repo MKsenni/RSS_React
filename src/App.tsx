@@ -10,6 +10,7 @@ type AppState = {
   searchWord: string;
   searchResult?: Description;
   isLoading: boolean;
+  hasError: boolean;
 };
 
 class App extends React.Component<AppProps, AppState> {
@@ -19,6 +20,7 @@ class App extends React.Component<AppProps, AppState> {
       searchWord: localStorage.getItem('searchWord') || '',
       searchResult: undefined,
       isLoading: false,
+      hasError: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -60,12 +62,13 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ isLoading: false });
   }
   render(): ReactNode {
+    if (this.state.hasError) throw new Error('Test Error Boundary');
     return (
       <>
         <h1 className="title">
           Star Wars <p className="subtitle">: heroes</p>
         </h1>
-        <section>
+        <section className="search-field">
           <form onSubmit={this.handleSearch}>
             <input
               type="text"
@@ -77,7 +80,7 @@ class App extends React.Component<AppProps, AppState> {
           <button
             onClick={(event) => {
               event.preventDefault();
-              throw new Error('Error for example');
+              this.setState({ hasError: true });
             }}
           >
             Error Boundary
@@ -89,25 +92,29 @@ class App extends React.Component<AppProps, AppState> {
           <section>
             <div className="cards">
               {this.state.searchResult &&
-                this.state.searchResult?.map((person, index) => {
-                  return (
-                    <div className="card" key={index}>
-                      <div className="text-container">
-                        <span className="card-name">Name: {person.name}</span>
-                        <span className="card-gender">
-                          Gender: {person.gender}
-                        </span>
-                        <span className="card-birth">
-                          Year: {person.birth_year}
-                        </span>
-                        <span className="card-mass">Mass: {person.mass}</span>
-                        <span className="card-height">
-                          Height: {person.height}
-                        </span>
+                (this.state.searchResult.length >= 1 ? (
+                  this.state.searchResult?.map((person, index) => {
+                    return (
+                      <div className="card" key={index}>
+                        <div className="text-container">
+                          <span className="card-name">Name: {person.name}</span>
+                          <span className="card-gender">
+                            Gender: {person.gender}
+                          </span>
+                          <span className="card-birth">
+                            Year: {person.birth_year}
+                          </span>
+                          <span className="card-mass">Mass: {person.mass}</span>
+                          <span className="card-height">
+                            Height: {person.height}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                ) : (
+                  <h2>No Results</h2>
+                ))}
             </div>
           </section>
         )}

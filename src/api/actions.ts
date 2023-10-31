@@ -26,9 +26,7 @@ export const searchPeople = async (searchWord: string) => {
     );
     const person: People = await response.json();
     return person.results;
-  } catch (error) {
-    console.log('Fetch is Faild');
-  }
+  } catch (error) {}
 };
 
 export const getPeople = async () => {
@@ -36,7 +34,5 @@ export const getPeople = async () => {
     const response = await fetch(`${baseUrl}/${path.people}`);
     const people: People = await response.json();
     return people.results;
-  } catch (error) {
-    console.log('Fetch is Faild');
-  }
+  } catch (error) {}
 };
