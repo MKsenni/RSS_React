@@ -4,6 +4,7 @@ import React from 'react';
 import { Description, getPeople, searchPeople } from './api/actions';
 import { Spinner } from './components/spinner';
 import Card from './components/Card';
+import Search from './components/Search';
 
 type AppProps = Record<string, never>;
 
@@ -23,15 +24,15 @@ class App extends React.Component<AppProps, AppState> {
       isLoading: false,
       hasError: false,
     };
-    this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.setSearchWord = this.setSearchWord.bind(this);
   }
 
   async componentDidMount(): Promise<void> {
     const searchWord = this.state.searchWord;
     this.setState({ isLoading: true });
     if (searchWord) {
-      const people = await searchPeople(searchWord);
+      const people: Description | undefined = await searchPeople(searchWord);
       this.setState({ searchResult: people });
     } else {
       await this.startPage();
@@ -44,24 +45,24 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   async startPage(): Promise<void> {
-    const allPeople = await getPeople();
+    const allPeople: Description | undefined = await getPeople();
     this.setState({ searchResult: allPeople });
-  }
-
-  handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    const searchWord: string = event.target.value;
-    this.setState({ searchWord });
   }
 
   async handleSearch(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     const searchWord: string = this.state.searchWord.toUpperCase().trim();
     this.setState({ isLoading: true });
-    const people = await searchPeople(searchWord);
+    const people: Description | undefined = await searchPeople(searchWord);
     this.setState({ searchResult: people });
     localStorage.setItem('searchWord', searchWord);
     this.setState({ isLoading: false });
   }
+
+  setSearchWord(searchWord: string) {
+    this.setState({ searchWord });
+  }
+
   render(): ReactNode {
     if (this.state.hasError) throw new Error('Test Error Boundary');
     return (
@@ -71,12 +72,12 @@ class App extends React.Component<AppProps, AppState> {
         </h1>
         <section className="search-field">
           <form onSubmit={this.handleSearch}>
-            <input
-              type="text"
-              value={this.state.searchWord.toUpperCase()}
-              onChange={this.handleChange}
+            <Search
+              searchWord={this.state.searchWord}
+              onUpdateWord={(searchWord: string): void => {
+                this.setSearchWord(searchWord);
+              }}
             />
-            <input type="submit" value="search" />
           </form>
           <button
             onClick={(event) => {
