@@ -7,6 +7,7 @@ export class Spinner extends React.Component {
       <>
         <img
           width={60}
+          height={60}
           src="/RSS_React/spinner.gif"
           alt="loading"
           style={{ margin: '20px' }}

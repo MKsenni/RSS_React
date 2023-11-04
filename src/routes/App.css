@@ -20,6 +20,21 @@ html {
   overflow: hidden;
 }
 
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+li {
+  margin: 0.25rem 0;
+}
+
+a {
+  color: rgba(90, 17, 122, 0.63);
+  transition: 0.3s;
+}
+
 .title {
   text-align: center;
   line-height: 0.8em;
@@ -59,6 +74,7 @@ html {
 
 .card {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
   width: 225px;
@@ -84,4 +100,71 @@ html {
 .card-name {
   font-size: 24px;
   margin-bottom: 10px;
+}
+
+.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  height: calc(100vh - 335px);
+  overflow-x: auto;
+  margin: 20px 0 20px 0;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 16px rgba(90, 17, 122, 0.63);
+}
+
+.card-link a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  white-space: pre;
+  padding: 0.5rem;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  gap: 1rem;
+}
+
+.card-link a:hover {
+  color: rgba(90, 17, 122, 0.63);
+}
+
+.card-link a.active {
+  background: rgba(90, 17, 122, 0.63);
+  color: #ff6;
+}
+
+.card-link a.pending {
+  color: rgba(82, 64, 90, 0.63);
+}
+
+.button-card {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  color: #ff6;
+  transition: color 0.3s;
+}
+
+.button-card:hover {
+  color: rgba(90, 17, 122, 0.63);
+}
+
+#detail {
+  flex: 1;
+  padding: 2rem 4rem;
+  width: 100%;
+}
+
+#detail.loading {
+  opacity: 0.25;
+  transition: opacity 200ms;
+  transition-delay: 200ms;
+}
+
+.results {
+  display: flex;
 }
