@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import React from 'react';
-import { Description } from '../api/actions';
+import { Description, PeopleResponse } from '../api/actions';
 import { Spinner } from '../components/spinner';
 import {
   Form,
@@ -76,6 +76,35 @@ export default function App() {
     setHasError(true);
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  useEffect(() => {
+    const fetchPeople = async () => {
+      const res = await fetch(
+        `https://swapi.dev/api/people/?page=${currentPage}&limit=${itemsPerPage}`
+      );
+      const person: PeopleResponse = await res.json();
+      setSearchResult(person.results);
+    };
+
+    fetchPeople();
+  }, [currentPage, itemsPerPage]);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(87 / itemsPerPage); i += 1) {
+    pageNumbers.push(i);
+  }
+
+  const handleClick = (event: React.MouseEvent<HTMLLIElement>): void => {
+    setCurrentPage(Number(event.currentTarget.id));
+  };
+
+  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    setItemsPerPage(Number(event.target.value));
+    setCurrentPage(1);
+  };
+
   return (
     <>
       {hasError && { throw: Error() }}
@@ -108,7 +137,7 @@ export default function App() {
                       className={({ isActive, isPending }) =>
                         isActive ? 'active' : isPending ? 'pending' : ''
                       }
-                      to={`heroes/${hero.name}`}
+                      to={`details/${hero.name}`}
                     >
                       {hero.name ? <>{hero.name}</> : <span>No Name</span>}
                     </NavLink>
@@ -127,6 +156,27 @@ export default function App() {
           <Outlet />
         </div>
       </section>
+      <div className="pagination-block">
+        <ul className="pagination">
+          {pageNumbers.map((number) => {
+            return (
+              <li key={number} id={`${number}`} onClick={handleClick}>
+                {number}
+              </li>
+            );
+          })}
+        </ul>
+        <select value={itemsPerPage} onChange={handleSelect}>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+        {/* <ul>
+          {pageResult?.map((person) => (
+            <li key={person.name}>{person.name}</li>
+          ))}
+        </ul> */}
+      </div>
     </>
   );
 }

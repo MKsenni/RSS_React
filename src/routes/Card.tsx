@@ -22,7 +22,7 @@ export default function Card() {
               <button
                 className="button-card"
                 type="button"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/RSS_React')}
               >
                 X
               </button>

@@ -24,7 +24,7 @@ const router = createBrowserRouter(
     >
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Index />} />
-        <Route path="heroes/:name" element={<Card />} loader={heroloader} />
+        <Route path="details/:name" element={<Card />} loader={heroloader} />
       </Route>
     </Route>
   )
