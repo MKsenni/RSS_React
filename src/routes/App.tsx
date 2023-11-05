@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import React from 'react';
-import { Description, PeopleResponse } from '../api/actions';
+import { Description, getPeople } from '../api/actions';
 import { Spinner } from '../components/spinner';
 import {
   Form,
@@ -21,6 +21,7 @@ export default function App() {
     new URLSearchParams(navigation.location.search).has('search');
 
   const [word, setWord] = useState(localStorage.getItem('searchWord') || '');
+  if (searching) localStorage.setItem('searchWord', word);
   const [searchResult, setSearchResult] = useState<Description | null>(people);
   const [hasError, setHasError] = useState(false);
 
@@ -28,48 +29,10 @@ export default function App() {
     setSearchResult(people);
   }, [people]);
 
-  // useEffect(() => {
-  //   const searchWord = localStorage.getItem('searchWord');
-  //   if (searchWord) {
-  //     setWord(searchWord);
-  //     handleSearch();
-  //   } else {
-  //     startPage();
-  //   }
-  // }, []);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const searchWord: string = event.target.value;
     setWord(searchWord);
   };
-
-  // const handleSearch = async () => {
-  //   setIsLoading(true);
-  //   localStorage.setItem('searchWord', word);
-  //   const searchWord: string = word.toUpperCase().trim();
-  //   const people: Description | null = await searchPeople(searchWord);
-  //   setSearchResult(people);
-  //   // localStorage.setItem('searchWord', searchWord);
-  //   setIsLoading(false);
-  // };
-
-  // const startPage = async (): Promise<void> => {
-  //   const allPeople: Description | null = await getPeople();
-  //   setSearchResult(allPeople);
-  // };
-
-  // const handleSearch = async (
-  //   event: React.FormEvent<HTMLFormElement>
-  // ): Promise<void> => {
-  //   event.preventDefault();
-  //   localStorage.setItem('searchWord', word);
-  //   const searchWord: string = word.toUpperCase().trim();
-  //   setIsLoading(true);
-  //   const people: Description | undefined = await searchPeople(searchWord);
-  //   setSearchResult(people);
-  //   // localStorage.setItem('searchWord', searchWord);
-  //   setIsLoading(false);
-  // };
 
   const errorBoundary = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
@@ -81,11 +44,8 @@ export default function App() {
 
   useEffect(() => {
     const fetchPeople = async () => {
-      const res = await fetch(
-        `https://swapi.dev/api/people/?page=${currentPage}&limit=${itemsPerPage}`
-      );
-      const person: PeopleResponse = await res.json();
-      setSearchResult(person.results);
+      const people = await getPeople(currentPage);
+      setSearchResult(people);
     };
 
     fetchPeople();
@@ -98,6 +58,8 @@ export default function App() {
 
   const handleClick = (event: React.MouseEvent<HTMLLIElement>): void => {
     setCurrentPage(Number(event.currentTarget.id));
+    localStorage.setItem('searchWord', '');
+    setWord('');
   };
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -171,11 +133,6 @@ export default function App() {
           <option value="20">20</option>
           <option value="50">50</option>
         </select>
-        {/* <ul>
-          {pageResult?.map((person) => (
-            <li key={person.name}>{person.name}</li>
-          ))}
-        </ul> */}
       </div>
     </>
   );
