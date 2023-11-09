@@ -18,11 +18,13 @@ export type PeopleResponse = {
   results: Description;
 };
 
-export const searchPeople = async (searchWord: string) => {
+export const searchPeople = async (searchWord: string, page: number = 1) => {
   try {
-    const response = await fetch(`${baseUrl}/?search=${searchWord}`);
+    const response = await fetch(
+      `${baseUrl}/?search=${searchWord}&page=${page}`
+    );
     const person: PeopleResponse = await response.json();
-    return person.results;
+    return person;
   } catch (error) {
     return null;
   }
@@ -32,7 +34,7 @@ export const getPeople = async (page: number = 1) => {
   try {
     const response = await fetch(`${baseUrl}/?page=${page}`);
     const people: PeopleResponse = await response.json();
-    return people.results;
+    return people;
   } catch (error) {
     return null;
   }

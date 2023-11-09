@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate } from 'react-router-dom';
-import { loaderCard } from './loaders';
+import { loaderCard } from '../../routes/loaders';
 
 export type PersonProps = {
   name: string;
@@ -15,14 +15,14 @@ export default function Card() {
 
   return (
     <>
-      {people &&
-        (people.length > 0 ? (
-          people.map((person: PersonProps, index: number) => (
+      {people?.results &&
+        (people.results.length > 0 ? (
+          people.results.map((person: PersonProps, index: number) => (
             <div className="card" key={index}>
               <button
                 className="button-card"
                 type="button"
-                onClick={() => navigate('/RSS_React')}
+                onClick={() => navigate('/')}
               >
                 X
               </button>

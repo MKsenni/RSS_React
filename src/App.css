@@ -109,7 +109,7 @@ a {
   height: calc(100vh - 400px);
   overflow-x: auto;
   margin: 20px 0 20px 0;
-  padding: 20px;
+  padding: 2rem 4rem;
   border-radius: 5px;
   box-shadow: 0px 0px 16px rgba(90, 17, 122, 0.63);
 }
@@ -167,6 +167,7 @@ a {
 
 .results {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .pagination {

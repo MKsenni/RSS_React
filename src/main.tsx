@@ -8,22 +8,20 @@ import {
   createRoutesFromElements,
 } from 'react-router-dom';
 import ErrorPage from './error-page.tsx';
-import App from './routes/App.tsx';
+import App from './App.tsx';
 import { loaderApp as rootLoader } from './routes/loaders.ts';
-import Card from './routes/Card.tsx';
+import Card from './components/card/Card.tsx';
 import { loaderCard as heroloader } from './routes/loaders.ts';
-import Index from './routes/index.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      path="/RSS_React"
+      path="/"
       element={<App />}
       errorElement={<ErrorPage />}
       loader={rootLoader}
     >
       <Route errorElement={<ErrorPage />}>
-        <Route index element={<Index />} />
         <Route path="details/:name" element={<Card />} loader={heroloader} />
       </Route>
     </Route>
