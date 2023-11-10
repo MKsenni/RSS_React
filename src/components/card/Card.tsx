@@ -1,17 +1,14 @@
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { loaderCard } from '../../routes/loaders';
-
-export type PersonProps = {
-  name: string;
-  gender: string;
-  birth_year: string;
-  height: string;
-  mass: string;
-};
+import { PersonProps } from '../../services/actions';
 
 export default function Card() {
   const navigate = useNavigate();
   const people = useLoaderData() as Awaited<ReturnType<typeof loaderCard>>;
+
+  const handleClose = (): void => {
+    navigate(-1);
+  };
 
   return (
     <>
@@ -22,7 +19,7 @@ export default function Card() {
               <button
                 className="button-card"
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={handleClose}
               >
                 X
               </button>
@@ -33,6 +30,7 @@ export default function Card() {
                 <span className="card-mass">Mass: {person.mass}</span>
                 <span className="card-height">Height: {person.height}</span>
               </div>
+              <span className="overlay" onClick={handleClose}></span>
             </div>
           ))
         ) : (

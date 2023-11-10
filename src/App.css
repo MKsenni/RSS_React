@@ -167,32 +167,60 @@ a {
 
 .results {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 
-.pagination li {
-  width: 30px;
-  height: 30px;
+.pagination-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   background-color: rgba(90, 17, 122, 0.401);
   color: #ff6;
   font-size: 16px;
   cursor: pointer;
-  margin: 0 5px;
+  transition: background-color 0.3s;
 }
 
-.pagination li:hover {
+.pagination-button:hover {
   background-color: rgba(255, 255, 102, 0.412);
 }
 
 .pagination-block {
   display: flex;
   gap: 10px;
+}
+
+.list-results {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.overlay {
+  position: fixed;
+  bottom: 75px;
+  left: 0;
+  width: 50%;
+  height: 54%;
+  background-color: rgba(41, 41, 41, 0);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  align-items: center;
+}
+
+.select-perpage {
+  border-radius: 10px;
 }

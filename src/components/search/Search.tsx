@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigation, Form } from 'react-router-dom';
 
-function Search() {
+export default function Search() {
   const navigation = useNavigation();
 
-  const searching =
+  const searching: boolean | undefined =
     navigation.location &&
     new URLSearchParams(navigation.location.search).has('search');
 
   const [word, setWord] = useState(localStorage.getItem('searchWord') || '');
-  if (searching) localStorage.setItem('searchWord', word);
+  if (searching) {
+    localStorage.setItem('searchWord', word);
+  }
   const [hasError, setHasError] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -43,5 +45,3 @@ function Search() {
     </>
   );
 }
-
-export default Search;

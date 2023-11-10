@@ -1,41 +1,53 @@
-import { NavLink, Outlet, useNavigation } from 'react-router-dom';
-import { Description } from '../../../services/actions';
+import { NavLink, Outlet, useLocation, useNavigation } from 'react-router-dom';
 import Spinner from '../../spiner/Spinner';
+import { useEffect, useState } from 'react';
+import { PersonProps } from '../../../services/actions';
 
-function ListResults({ searchResult }: { searchResult: Description | null }) {
+export default function ListResults({
+  searchResult: people,
+}: {
+  searchResult: PersonProps[] | null;
+}) {
+  const [searchResult, setSearchResult] = useState(people);
   const navigation = useNavigation();
+
+  const { search } = useLocation();
+
+  useEffect(() => {
+    setSearchResult(people);
+  }, [people]);
 
   return (
     <>
-      <nav className="navigation">
-        {searchResult?.length ? (
-          <ul className="cards-list">
-            {searchResult.map((hero, index) => (
-              <li key={index} className="card-link">
-                <NavLink
-                  className={({ isActive, isPending }) =>
-                    isActive ? 'active' : isPending ? 'pending' : ''
-                  }
-                  to={`details/${hero.name}`}
-                >
-                  {hero.name ? <>{hero.name}</> : <span>No Name</span>}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+      <div className="list-results">
+        <nav className="navigation">
+          {searchResult?.length ? (
+            <ul className="cards-list">
+              {searchResult.map((hero, index) => (
+                <li key={index} className="card-link">
+                  <NavLink
+                    className={({ isActive, isPending }) =>
+                      isActive ? 'active' : isPending ? 'pending' : ''
+                    }
+                    to={`details/${hero.name}` + search}
+                  >
+                    {hero.name ? <>{hero.name}</> : <span>No Name</span>}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <span>No Results</span>
+          )}
+        </nav>
+        {navigation.state === 'loading' ? (
+          <Spinner />
         ) : (
-          <span>No Results</span>
+          <div id="detail">
+            <Outlet />
+          </div>
         )}
-      </nav>
-      {navigation.state === 'loading' ? (
-        <Spinner />
-      ) : (
-        <div id="detail">
-          <Outlet />
-        </div>
-      )}
+      </div>
     </>
   );
 }
-
-export default ListResults;

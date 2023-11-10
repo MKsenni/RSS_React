@@ -1,50 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, useSearchParams } from 'react-router-dom';
-import {
-  Description,
-  PeopleResponse,
-  searchPeople,
-} from '../../services/actions';
-
-// const NUMBER_PEOPLE = 87;
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PeopleResponse } from '../../services/actions';
 
 export default function Pagination({
   people,
-  onUpdate,
 }: {
   people: PeopleResponse | null;
-  onUpdate: (people: Description) => void;
 }) {
-  console.log(people);
-
+  const searchWord = localStorage.getItem('searchWord') || '';
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const word = localStorage.getItem('searchWord') || '';
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const prevCurrentPage = useRef(currentPage);
+  const prevItemsPerPage = useRef(itemsPerPage);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPeople = async () => {
-      const people = await searchPeople(word, Number(searchParams));
-      if (people) {
-        onUpdate(people.results);
+    if (
+      prevCurrentPage.current !== currentPage ||
+      prevItemsPerPage.current !== itemsPerPage
+    ) {
+      if (searchWord) {
+        // setSearchParams({
+        //   page: currentPage.toString(),
+        //   limit: itemsPerPage.toString(),
+        //   search: searchWord,
+        // });
+        const params = new URLSearchParams();
+        params.set('page', currentPage.toString());
+        params.set('limit', itemsPerPage.toString());
+        params.set('search', searchWord);
+        navigate(`?${params.toString()}`);
+      } else {
+        const params = new URLSearchParams();
+        params.set('page', currentPage.toString());
+        params.set('limit', itemsPerPage.toString());
+        navigate(`?${params.toString()}`);
+        // setSearchParams({
+        //   page: currentPage.toString(),
+        //   limit: itemsPerPage.toString(),
+        // });
+
+        // const params = new URLSearchParams(searchParams.toString());
+        // params.set('page', currentPage.toString());
+        // params.set('limit', itemsPerPage.toString());
+        // navigate(`?${params.toString()}`);
       }
-    };
-    fetchPeople();
+      prevCurrentPage.current = currentPage;
+      prevItemsPerPage.current = itemsPerPage;
+    }
   }, [currentPage, itemsPerPage]);
 
-  const pageNumbers = [];
-  if (people) {
-    for (let i = 1; i <= Math.ceil(people.count / itemsPerPage); i += 1) {
-      pageNumbers.push(i);
-    }
-  }
+  const prevBtn = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
 
-  const handleClick = (event: React.MouseEvent<HTMLLIElement>): void => {
-    setCurrentPage(Number(event.currentTarget.id));
-    setSearchParams({ page: event.currentTarget.id + 1 });
-    // localStorage.setItem('searchWord', '');
-    // setWord('');
+  const nextBtn = () => {
+    if (people && people.next) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -55,16 +70,28 @@ export default function Pagination({
   return (
     <>
       <div className="pagination-block">
-        <ul className="pagination">
-          {pageNumbers.map((number) => {
-            return (
-              <li key={number} id={`${number}`} onClick={handleClick}>
-                <NavLink to={`page/${number}`}>{number}</NavLink>
-              </li>
-            );
-          })}
-        </ul>
-        <select value={itemsPerPage} onChange={handleSelect}>
+        <div className="pagination">
+          <button
+            className="pagination-button"
+            onClick={prevBtn}
+            disabled={people?.previous ? false : true}
+          >
+            prev
+          </button>
+          <span>{currentPage}</span>
+          <button
+            className="pagination-button"
+            onClick={nextBtn}
+            disabled={people?.next ? false : true}
+          >
+            next
+          </button>
+        </div>
+        <select
+          className="select-perpage"
+          value={itemsPerPage}
+          onChange={handleSelect}
+        >
           <option value="10">10</option>
           <option value="20">20</option>
           <option value="50">50</option>

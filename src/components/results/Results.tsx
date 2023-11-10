@@ -3,12 +3,13 @@ import Spinner from '../spiner/Spinner';
 import ListResults from './list-results/ListResults';
 import { loaderApp } from '../../routes/loaders';
 import { useState, useEffect } from 'react';
-import { Description } from '../../services/actions';
+import Pagination from '../pagination/Pagination';
+import { PersonProps } from '../../services/actions';
 
-function Results() {
+export default function Results() {
   const people = useLoaderData() as Awaited<ReturnType<typeof loaderApp>>;
 
-  const [searchResult, setSearchResult] = useState<Description | null>(
+  const [searchResult, setSearchResult] = useState<PersonProps[] | null>(
     people ? people.results : null
   );
 
@@ -23,9 +24,14 @@ function Results() {
 
   return (
     <section className="results">
-      {searching ? <Spinner /> : <ListResults searchResult={searchResult} />}
+      {searching ? (
+        <Spinner />
+      ) : (
+        <>
+          <ListResults searchResult={searchResult} />
+          <Pagination people={people} />
+        </>
+      )}
     </section>
   );
 }
-
-export default Results;
