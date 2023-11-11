@@ -1,3 +1,4 @@
+import style from './search.module.css';
 import React, { useState } from 'react';
 import { useNavigation, Form } from 'react-router-dom';
 
@@ -26,10 +27,10 @@ export default function Search() {
   return (
     <>
       {hasError && { throw: Error() }}
-      <h1 className="title">
-        Star Wars <p className="subtitle">: heroes</p>
+      <h1 className={style.title}>
+        Star Wars <p className={style.subtitle}>: heroes</p>
       </h1>
-      <section className="search-field">
+      <section className={style.searchField}>
         <Form role="search">
           <input
             type="search"

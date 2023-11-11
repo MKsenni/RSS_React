@@ -1,3 +1,4 @@
+import style from './pagination.module.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PeopleResponse } from '../../services/actions';
@@ -69,10 +70,10 @@ export default function Pagination({
 
   return (
     <>
-      <div className="pagination-block">
-        <div className="pagination">
+      <div className={style.pagination}>
+        <div className={style.container}>
           <button
-            className="pagination-button"
+            className={style.button}
             onClick={prevBtn}
             disabled={people?.previous ? false : true}
           >
@@ -80,7 +81,7 @@ export default function Pagination({
           </button>
           <span>{currentPage}</span>
           <button
-            className="pagination-button"
+            className={style.button}
             onClick={nextBtn}
             disabled={people?.next ? false : true}
           >
@@ -88,7 +89,7 @@ export default function Pagination({
           </button>
         </div>
         <select
-          className="select-perpage"
+          className={style.select}
           value={itemsPerPage}
           onChange={handleSelect}
         >

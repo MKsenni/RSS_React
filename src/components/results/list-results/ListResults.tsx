@@ -1,3 +1,4 @@
+import style from './listResults.module.css';
 import { NavLink, Outlet, useLocation, useNavigation } from 'react-router-dom';
 import Spinner from '../../spiner/Spinner';
 import { useEffect, useState } from 'react';
@@ -19,12 +20,12 @@ export default function ListResults({
 
   return (
     <>
-      <div className="list-results">
-        <nav className="navigation">
+      <div className={style.list}>
+        <nav className={style.navigation}>
           {searchResult?.length ? (
-            <ul className="cards-list">
+            <ul className={style.cards}>
               {searchResult.map((hero, index) => (
-                <li key={index} className="card-link">
+                <li key={index} className={style.link}>
                   <NavLink
                     className={({ isActive, isPending }) =>
                       isActive ? 'active' : isPending ? 'pending' : ''
@@ -43,7 +44,7 @@ export default function ListResults({
         {navigation.state === 'loading' ? (
           <Spinner />
         ) : (
-          <div id="detail">
+          <div className={style.detail}>
             <Outlet />
           </div>
         )}

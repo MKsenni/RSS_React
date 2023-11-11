@@ -1,3 +1,4 @@
+import style from './results.module.css';
 import { useLoaderData, useNavigation } from 'react-router-dom';
 import Spinner from '../spiner/Spinner';
 import ListResults from './list-results/ListResults';
@@ -23,7 +24,7 @@ export default function Results() {
   }, [people]);
 
   return (
-    <section className="results">
+    <section className={style.results}>
       {searching ? (
         <Spinner />
       ) : (

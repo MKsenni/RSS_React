@@ -1,0 +1,40 @@
+.pagination {
+  display: flex;
+  gap: 10px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(90, 17, 122, 0.401);
+  color: #ff6;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: rgba(255, 255, 102, 0.412);
+}
+
+.button:disabled {
+  background-color: rgba(55, 55, 50, 0.412);
+  cursor: default;
+}
+
+.select {
+  border-radius: 10px;
+}
