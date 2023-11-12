@@ -1,6 +1,7 @@
 import style from './search.module.css';
 import React, { useState } from 'react';
 import { useNavigation, Form } from 'react-router-dom';
+import { SearchWordContext } from '../../context';
 
 export default function Search() {
   const navigation = useNavigation();
@@ -27,22 +28,24 @@ export default function Search() {
   return (
     <>
       {hasError && { throw: Error() }}
-      <h1 className={style.title}>
-        Star Wars <p className={style.subtitle}>: heroes</p>
-      </h1>
-      <section className={style.searchField}>
-        <Form role="search">
-          <input
-            type="search"
-            name="search"
-            value={word.toUpperCase()}
-            placeholder="name of hero"
-            onChange={handleChange}
-          />
-          <div id="search-spinner" aria-hidden hidden={!searching} />
-        </Form>
-        <button onClick={errorBoundary}>Error Boundary</button>
-      </section>
+      <SearchWordContext.Provider value={word}>
+        <h1 className={style.title}>
+          Star Wars <p className={style.subtitle}>: heroes</p>
+        </h1>
+        <section className={style.searchField}>
+          <Form role="search">
+            <input
+              type="search"
+              name="search"
+              value={word.toUpperCase()}
+              placeholder="name of hero"
+              onChange={handleChange}
+            />
+            <div id="search-spinner" aria-hidden hidden={!searching} />
+          </Form>
+          <button onClick={errorBoundary}>Error Boundary</button>
+        </section>
+      </SearchWordContext.Provider>
     </>
   );
 }
