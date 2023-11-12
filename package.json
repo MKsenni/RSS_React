@@ -12,7 +12,7 @@
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "prettier --write --ignore-path .gitignore .",
     "prepare": "husky install",
-    "test": "jest -u --passWithNoTests",
+    "test": "jest --passWithNoTests",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

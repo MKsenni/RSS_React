@@ -20,11 +20,6 @@ export default function Pagination() {
       prevItemsPerPage.current !== itemsPerPage
     ) {
       if (searchWord) {
-        // setSearchParams({
-        //   page: currentPage.toString(),
-        //   limit: itemsPerPage.toString(),
-        //   search: searchWord,
-        // });
         const params = new URLSearchParams();
         params.set('page', currentPage.toString());
         params.set('limit', itemsPerPage.toString());
@@ -35,15 +30,6 @@ export default function Pagination() {
         params.set('page', currentPage.toString());
         params.set('limit', itemsPerPage.toString());
         navigate(`?${params.toString()}`);
-        // setSearchParams({
-        //   page: currentPage.toString(),
-        //   limit: itemsPerPage.toString(),
-        // });
-
-        // const params = new URLSearchParams(searchParams.toString());
-        // params.set('page', currentPage.toString());
-        // params.set('limit', itemsPerPage.toString());
-        // navigate(`?${params.toString()}`);
       }
       prevCurrentPage.current = currentPage;
       prevItemsPerPage.current = itemsPerPage;

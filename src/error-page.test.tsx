@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { ErrorResponse, MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, waitFor } from '@testing-library/react';
+import { screen, render, waitFor, cleanup } from '@testing-library/react';
 import ErrorPage from './error-page';
 import Card from './components/card/Card';
 
@@ -15,9 +15,7 @@ jest.mock('react-router-dom', () => ({
   isRouteErrorResponse: () => mockIsRouteErrorResponse,
 }));
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
+afterEach(cleanup);
 
 describe('ErrorPage component', () => {
   it('rendering if request is invalid without ErrorResponse', () => {
