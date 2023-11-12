@@ -6,9 +6,11 @@ export default function ErrorPage() {
     return (
       <div>
         <h2>Something went wrong!</h2>
-        <h2>{error.status}</h2>
-        <p>{error.statusText}</p>
-        {error.data?.message && <p>{error.data.message}</p>}
+        <h2 data-testid="error-status">{error.status}</h2>
+        <p data-testid="error-text">{error.statusText}</p>
+        {error.data?.message && (
+          <p data-testid="error-message">{error.data.message}</p>
+        )}
       </div>
     );
   } else {
