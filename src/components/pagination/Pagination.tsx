@@ -1,13 +1,10 @@
 import style from './pagination.module.css';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PeopleResponse } from '../../services/actions';
+import { ResultsPeopleContext } from '../../context';
 
-export default function Pagination({
-  people,
-}: {
-  people: PeopleResponse | null;
-}) {
+export default function Pagination() {
+  const people = useContext(ResultsPeopleContext);
   const searchWord = localStorage.getItem('searchWord') || '';
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);

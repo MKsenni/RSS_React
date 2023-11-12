@@ -1,21 +1,18 @@
 import style from './listResults.module.css';
 import { NavLink, Outlet, useLocation, useNavigation } from 'react-router-dom';
 import Spinner from '../../spiner/Spinner';
-import { useEffect, useState } from 'react';
-import { PersonProps } from '../../../services/actions';
+import { useContext, useEffect, useState } from 'react';
+import { ResultsPeopleContext } from '../../../context';
 
-export default function ListResults({
-  searchResult: people,
-}: {
-  searchResult: PersonProps[] | null;
-}) {
-  const [searchResult, setSearchResult] = useState(people);
+export default function ListResults() {
+  const people = useContext(ResultsPeopleContext);
+  const [searchResult, setSearchResult] = useState(people?.results);
   const navigation = useNavigation();
 
   const { search } = useLocation();
 
   useEffect(() => {
-    setSearchResult(people);
+    setSearchResult(people?.results);
   }, [people]);
 
   return (
