@@ -28,6 +28,7 @@ const config: Config = {
     '!**/*.d.ts',
     '!**/node_modules/**',
     '!<rootDir>/out/**',
+    '!<rootDir>/dist/**',
     '!<rootDir>/*.config.js',
     '!<rootDir>/*.lintstagedrc.js',
     '!<rootDir>/*.config.ts',
