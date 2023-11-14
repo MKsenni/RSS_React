@@ -16,7 +16,7 @@ export default function Card() {
       {people?.results &&
         (people.results.length > 0 ? (
           people.results.map((person: PersonProps, index: number) => (
-            <div className={style.card} key={index}>
+            <div className={style.card} key={index} data-testid="card">
               <button
                 className={style.button}
                 type="button"
