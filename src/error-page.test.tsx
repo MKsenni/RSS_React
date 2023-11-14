@@ -1,65 +1,36 @@
 import '@testing-library/jest-dom';
-import { ErrorResponse, MemoryRouter, Route, Routes } from 'react-router-dom';
-import { screen, render, waitFor, cleanup } from '@testing-library/react';
+import {
+  Route,
+  RouterProvider,
+  createMemoryRouter,
+  createRoutesFromElements,
+} from 'react-router-dom';
+import { screen, render, cleanup } from '@testing-library/react';
 import ErrorPage from './error-page';
 import Card from './components/card/Card';
+import App from './App';
 
 jest.mock('@/components/card/Card');
+jest.mock('@/App.tsx');
 
-const mockUseRouteError = jest.fn();
-const mockIsRouteErrorResponse = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useRouteError: () => mockUseRouteError,
-  isRouteErrorResponse: () => mockIsRouteErrorResponse,
-}));
+const routerSetting = createRoutesFromElements(
+  <Route path="/" element={<App />} errorElement={<ErrorPage />}>
+    <Route path="details/:name" element={<Card />} />
+  </Route>
+);
+const badRoute = '/wrongroute';
+const routerTest = createMemoryRouter(routerSetting, {
+  initialEntries: [badRoute],
+});
 
 afterEach(cleanup);
 
 describe('ErrorPage component', () => {
-  it('rendering if request is invalid without ErrorResponse', () => {
-    const badRoute = '/wrongroute';
-
-    render(
-      <MemoryRouter initialEntries={[badRoute]}>
-        <Routes>
-          <Route path="/wrongroute" element={<ErrorPage />}>
-            <Route path="details/:name" element={<Card />} />
-          </Route>
-        </Routes>
-      </MemoryRouter>
-    );
-
-    const text = screen.getByText('Something went wrong!');
-    expect(text).toBeInTheDocument();
-  });
-  it('rendering if request is invalid with ErrorResponse', async () => {
-    const mockError: ErrorResponse = {
-      status: 404,
-      statusText: 'Not Found',
-      data: {
-        message: 'Any text',
-      },
-    };
-    mockUseRouteError.mockReturnValue(mockError);
-    mockIsRouteErrorResponse.mockResolvedValue(mockError);
-    const badRoute = '/wrongroute';
-
-    await waitFor(() => {
-      render(
-        <MemoryRouter initialEntries={[badRoute]}>
-          <Routes>
-            <Route path="/wrongroute" element={<ErrorPage />}>
-              <Route path="details/:name" element={<Card />} />
-            </Route>
-          </Routes>
-        </MemoryRouter>
-      );
-    });
+  it('rendering if request is invalid with ErrorResponse', () => {
+    render(<RouterProvider router={routerTest} />);
 
     expect(screen.getByText('Something went wrong!')).toBeInTheDocument();
-    expect(screen.getByTestId('error-status')).toBeInTheDocument();
-    expect(screen.getByTestId('error-text')).toBeInTheDocument();
+    expect(screen.getByText('404')).toBeInTheDocument();
+    expect(screen.getByText('Not Found')).toBeInTheDocument();
   });
 });
