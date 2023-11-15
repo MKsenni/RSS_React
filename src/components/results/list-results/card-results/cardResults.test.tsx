@@ -6,7 +6,7 @@ import { mockResults } from '../../../../data/data-mocks';
 import ListResults from '../ListResults';
 import Card from '../../../card/Card';
 
-const mockUseNavigate = jest.fn().mockReturnValue('');
+const mockUseNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockUseNavigate,

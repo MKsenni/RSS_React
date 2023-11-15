@@ -14,7 +14,7 @@ export default function CardResults({ hero }: { hero: PersonProps }) {
           }
           to={`details/${hero.name}` + search}
         >
-          {hero.name ? <>{hero.name}</> : <span>No Name</span>}
+          {hero.name}
         </NavLink>
       </li>
     </>
