@@ -1,0 +1,36 @@
+@import url(https://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+
+#root {
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  height: 100vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+body,
+html {
+  font-family: 'Droid Sans', arial, verdana, sans-serif;
+  font-weight: 700;
+  color: #ff6;
+  background: black url('https://s3.amazonaws.com/csstarwars/background.png');
+  /* overflow: hidden; */
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+li {
+  margin: 0.25rem 0;
+}
+
+a {
+  color: rgba(90, 17, 122, 0.63);
+  transition: 0.3s;
+}
