@@ -26,6 +26,10 @@ const config: Config = {
   collectCoverageFrom: [
     '**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
+    '!**/loaders.ts',
+    '!**/actions.ts',
+    '!**/main.tsx',
+    '!**/router.tsx',
     '!**/node_modules/**',
     '!<rootDir>/out/**',
     '!<rootDir>/dist/**',

@@ -1,5 +1,5 @@
 export const mockResults = {
-  count: 82,
+  count: 6,
   next: 'https://swapi.dev/api/people/?page=2',
   previous: null,
   results: [
