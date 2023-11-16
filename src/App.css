@@ -17,7 +17,22 @@ html {
   font-weight: 700;
   color: #ff6;
   background: black url('https://s3.amazonaws.com/csstarwars/background.png');
-  /* overflow: hidden; */
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  opacity: 1;
+  padding: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: rgba(90, 17, 122, 0.63);
 }
 
 ul {
