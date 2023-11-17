@@ -1,20 +1,37 @@
-import { Dispatch, ReactNode, createContext, useState } from 'react';
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  createContext,
+  useMemo,
+  useState,
+} from 'react';
 import { PeopleResponse } from './services/actions';
 
-export const SearchWordContext = createContext('');
+type TypeSetState<S> = Dispatch<SetStateAction<S>>;
 
-export const SearchWordContextDispatch = createContext<Dispatch<
-  React.SetStateAction<string>
-> | null>(null);
+export interface ISearchWordContext {
+  word: string;
+  setWord: TypeSetState<string>;
+}
+
+export const SearchWordContext = createContext<ISearchWordContext>({
+  word: '',
+  setWord: () => {},
+});
+
+// export const SearchWordContextDispatch = createContext<Dispatch<
+//   React.SetStateAction<string>
+// > | null>(null);
 
 export function SearhWord({ children }: { children: ReactNode }) {
   const [word, setWord] = useState(localStorage.getItem('searchWord') || '');
 
+  const value = useMemo(() => ({ word, setWord }), [word]);
+
   return (
-    <SearchWordContext.Provider value={word}>
-      <SearchWordContextDispatch.Provider value={setWord}>
-        {children}
-      </SearchWordContextDispatch.Provider>
+    <SearchWordContext.Provider value={value}>
+      {children}
     </SearchWordContext.Provider>
   );
 }
