@@ -1,10 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-export interface SearchWordStore {
+export interface ISearchWordStore {
   searchWord: string | null;
 }
 
-const initialState: SearchWordStore = {
+const initialState: ISearchWordStore = {
   searchWord: '' || localStorage.getItem('searchWord'),
 };
 

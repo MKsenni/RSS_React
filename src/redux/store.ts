@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import searchWordReducer from './slices/searchWordSlice';
+import itemsPerPageReducer from './slices/itemsPerPageSlice';
 
 export const store = configureStore({
   reducer: {
     searchWord: searchWordReducer,
+    itemsPerPage: itemsPerPageReducer,
   },
 });
 
