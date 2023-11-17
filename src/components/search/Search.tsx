@@ -1,24 +1,30 @@
 import style from './search.module.css';
-import React, { useContext, useState } from 'react';
-import { useNavigation, Form } from 'react-router-dom';
-import { SearchWordContext } from '../../context';
+import React from 'react';
+import { Form } from 'react-router-dom';
+import { setWord } from '../../redux/slices/searchWordSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 export default function Search() {
-  const navigation = useNavigation();
+  const word: string | null = useAppSelector(
+    (state) => state.searchWord.searchWord
+  );
+  const dispatch = useAppDispatch();
 
-  const searching: boolean | undefined =
-    navigation.location &&
-    new URLSearchParams(navigation.location.search).has('search');
+  // const navigation = useNavigation();
 
-  const wordContext = useContext(SearchWordContext);
-  const [word, setWord] = useState(wordContext);
-  if (searching) {
-    localStorage.setItem('searchWord', word);
-  }
+  // const searching: boolean | undefined =
+  //   navigation.location &&
+  //   new URLSearchParams(navigation.location.search).has('search');
+
+  // const { word, setWord } = useContext<ISearchWordContext>(SearchWordContext);
+  // const [word, setWord] = useState(wordContext);
+  // if (searching && word) {
+  //   localStorage.setItem('searchWord', word);
+  // }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const searchWord: string = event.target.value;
-    setWord(searchWord);
+    dispatch(setWord(searchWord));
   };
 
   return (
@@ -31,7 +37,7 @@ export default function Search() {
           <input
             type="search"
             name="search"
-            value={word.toUpperCase()}
+            value={word ? word.toUpperCase() : ''}
             placeholder="name of hero"
             onChange={handleChange}
           />
