@@ -1,11 +1,13 @@
 import style from './card.module.css';
-import { useLoaderData, useNavigate } from 'react-router-dom';
-import { loaderCard } from '../../routes/loaders';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PersonProps } from '../../services/types';
+import { useGetPersonQuery } from '../../services/peopleApi';
 
 export default function Card() {
+  const { name } = useParams();
   const navigate = useNavigate();
-  const people = useLoaderData() as Awaited<ReturnType<typeof loaderCard>>;
+
+  const { data } = useGetPersonQuery(name ? name : '');
 
   const handleClose = (): void => {
     navigate(-1);
@@ -13,9 +15,9 @@ export default function Card() {
 
   return (
     <>
-      {people?.results &&
-        (people.results.length > 0 ? (
-          people.results.map((person: PersonProps, index: number) => (
+      {data?.results &&
+        (data.results.length > 0 ? (
+          data.results.map((person: PersonProps, index: number) => (
             <div className={style.card} key={index} data-testid="card">
               <button
                 className={style.button}
