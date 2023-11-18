@@ -1,19 +1,6 @@
+import { PeopleResponse } from './types';
+
 export const baseUrl = 'https://swapi.dev/api/people';
-
-export type PeopleResponse = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: PersonProps[];
-};
-
-export type PersonProps = {
-  name: string;
-  gender: string;
-  birth_year: string;
-  height: string;
-  mass: string;
-};
 
 export const searchPeople = async (searchWord: string, page: number = 1) => {
   try {

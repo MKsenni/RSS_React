@@ -1,11 +1,6 @@
 import { LoaderFunctionArgs } from 'react-router-dom';
-import {
-  searchPeople,
-  getPeople,
-  PeopleResponse,
-  getPerson,
-  PersonProps,
-} from '../services/actions';
+import { searchPeople, getPeople, getPerson } from '../services/actions';
+import { PeopleResponse, PersonProps } from '../services/types';
 
 export async function loaderApp({ request }: LoaderFunctionArgs<string>) {
   const searchWord = localStorage.getItem('searchWord');

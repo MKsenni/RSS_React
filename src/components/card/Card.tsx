@@ -1,7 +1,7 @@
 import style from './card.module.css';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { loaderCard } from '../../routes/loaders';
-import { PersonProps } from '../../services/actions';
+import { PersonProps } from '../../services/types';
 
 export default function Card() {
   const navigate = useNavigate();
