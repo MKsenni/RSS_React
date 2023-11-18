@@ -1,29 +1,39 @@
 import style from './results.module.css';
-import { useLoaderData, useNavigation } from 'react-router-dom';
-import Spinner from '../spiner/Spinner';
 import ListResults from './list-results/ListResults';
-import { loaderApp } from '../../routes/loaders';
 import Pagination from '../pagination/Pagination';
-import { ResultsPeopleContext } from '../../context';
+import { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import { updateItems } from '../../redux/slices/itemsPerPageSlice';
+import { useGetPeopleQuery } from '../../services/peopleApi';
+import Spinner from '../spiner/Spinner';
 
 export default function Results() {
-  const people = useLoaderData() as Awaited<ReturnType<typeof loaderApp>>;
+  const page: number = useAppSelector((state) => state.currentPage.pageNum);
+  const { data, isLoading, isFetching } = useGetPeopleQuery(
+    page ? Number(page) : 1
+  );
 
-  const navigation = useNavigation();
-  const searching =
-    navigation.location &&
-    new URLSearchParams(navigation.location.search).has('search');
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(updateItems(data?.results));
+    console.log(data);
+  }, [data]);
+
+  const totalItems = data?.count;
+  const countPerPage = useAppSelector(
+    (state) => state.currentPage.countPerPage
+  );
+  if (!totalItems) return <Spinner />;
+  const totalPage = Math.ceil(totalItems / countPerPage);
 
   return (
     <section className={style.results}>
-      {searching ? (
+      {isLoading || isFetching ? (
         <Spinner />
       ) : (
         <>
-          <ResultsPeopleContext.Provider value={people ? people : null}>
-            <ListResults />
-            <Pagination />
-          </ResultsPeopleContext.Provider>
+          <ListResults />
+          <Pagination totalPage={totalPage} />
         </>
       )}
     </section>

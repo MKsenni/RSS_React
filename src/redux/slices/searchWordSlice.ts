@@ -20,8 +20,9 @@ export const searchWordSlice = createSlice({
     //   wordLS ? (state.searchWord = wordLS) : (state.searchWord = '');
     // },
     setWord: (state, action: PayloadAction<string>) => {
-      state.searchWord = action.payload;
       localStorage.setItem('searchWord', action.payload);
+      // return { ...state, searchWord: action.payload };
+      state.searchWord = action.payload;
     },
   },
 });

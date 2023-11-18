@@ -1,15 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit';
 import searchWordReducer from './slices/searchWordSlice';
 import itemsPerPageReducer from './slices/itemsPerPageSlice';
+import { peopleApi } from '../services/peopleApi';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import currentPageReducer from './slices/currentPageSlice';
 
 export const store = configureStore({
   reducer: {
     searchWord: searchWordReducer,
+    currentPage: currentPageReducer,
     itemsPerPage: itemsPerPageReducer,
+    [peopleApi.reducerPath]: peopleApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(peopleApi.middleware),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
+setupListeners(store.dispatch);
+
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

@@ -1,14 +1,20 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { PeopleResponse, PersonProps, baseUrl } from './actions';
+import { baseUrl } from './actions';
+import { PeopleResponse } from './types';
+
+export type QueryProps = {
+  page?: number;
+  searchWord?: string;
+};
 
 export const peopleApi = createApi({
   reducerPath: 'peopleApi',
   baseQuery: fetchBaseQuery({ baseUrl: baseUrl }),
-  endpoints: (builder) => ({
-    getPeople: builder.query<PeopleResponse, number>({
-      query: (page = 1) => `/?page=${page === 0 ? 1 : page}`,
+  endpoints: (build) => ({
+    getPeople: build.query<PeopleResponse, number>({
+      query: (page: number = 1) => `/?page=${page}`,
     }),
-    getPerson: builder.query<PersonProps, string>({
+    getPerson: build.query<PeopleResponse, string>({
       query: (searchWord: string) => `/?search=${searchWord}`,
     }),
   }),

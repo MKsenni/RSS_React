@@ -1,7 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PersonProps } from '../../services/types';
 
 export interface IItemsPerPageStore {
-  itemsPerPage: [];
+  itemsPerPage?: PersonProps[];
 }
 
 const initialState: IItemsPerPageStore = {
@@ -11,7 +12,13 @@ const initialState: IItemsPerPageStore = {
 export const itemsPerPageSlice = createSlice({
   name: 'itemsPerPage',
   initialState,
-  reducers: {},
+  reducers: {
+    updateItems: (state, action: PayloadAction<PersonProps[] | undefined>) => {
+      state.itemsPerPage = action.payload;
+    },
+  },
 });
+
+export const { updateItems } = itemsPerPageSlice.actions;
 
 export default itemsPerPageSlice.reducer;
