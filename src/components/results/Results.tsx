@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import { updateItems } from '../../redux/slices/itemsPerPageSlice';
 import { useGetPeopleQuery } from '../../services/peopleApi';
 import Spinner from '../spiner/Spinner';
+import { setLoadingMainPage } from '../../redux/slices/loadingFlagsSlice';
 
 export default function Results() {
   const page: number = useAppSelector((state) => state.currentPage.pageNum);
@@ -15,7 +16,10 @@ export default function Results() {
   const countPerPage = useAppSelector(
     (state) => state.currentPage.countPerPage
   );
-  const { data, isLoading, isFetching } = useGetPeopleQuery({
+  const loadingMainPage = useAppSelector(
+    (state) => state.loadingFlags.mainPageLoading
+  );
+  const { data, isFetching } = useGetPeopleQuery({
     page: page ?? 1,
     searchWord: searchWord ?? '',
   });
@@ -25,13 +29,17 @@ export default function Results() {
     dispatch(updateItems(data?.results));
   }, [data]);
 
+  useEffect(() => {
+    dispatch(setLoadingMainPage(isFetching));
+  }, [isFetching]);
+
   const totalItems = data?.count;
   if (!totalItems) return <Spinner />;
   const totalPage = Math.ceil(totalItems / countPerPage);
 
   return (
     <section className={style.results}>
-      {isLoading || isFetching ? (
+      {loadingMainPage ? (
         <Spinner />
       ) : (
         <>

@@ -1,6 +1,6 @@
+import { PersonProps } from '../../../../services/types';
 import style from '../listResults.module.css';
 import { NavLink, useLocation } from 'react-router-dom';
-import { PersonProps } from '../../../../services/actions';
 
 export default function CardResults({ hero }: { hero: PersonProps }) {
   const { search } = useLocation();

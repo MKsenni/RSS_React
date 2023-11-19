@@ -2,16 +2,31 @@ import style from './card.module.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PersonProps } from '../../services/types';
 import { useGetPersonQuery } from '../../services/peopleApi';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { setLoadingDetailsPage } from '../../redux/slices/loadingFlagsSlice';
+import { useEffect } from 'react';
+import Spinner from '../spiner/Spinner';
 
 export default function Card() {
-  const { name } = useParams();
   const navigate = useNavigate();
 
-  const { data } = useGetPersonQuery(name ? name : '');
+  const { name } = useParams();
+  const { data, isFetching } = useGetPersonQuery(name ? name : '');
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(setLoadingDetailsPage(isFetching));
+  }, [dispatch, isFetching]);
+
+  const loadingDetailPage = useAppSelector(
+    (state) => state.loadingFlags.detailsPageLoading
+  );
 
   const handleClose = (): void => {
     navigate(-1);
   };
+
+  if (loadingDetailPage) return <Spinner />;
 
   return (
     <>

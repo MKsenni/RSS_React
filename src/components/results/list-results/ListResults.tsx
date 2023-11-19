@@ -1,12 +1,9 @@
 import style from './listResults.module.css';
-import { Outlet, useNavigation } from 'react-router-dom';
-import Spinner from '../../spiner/Spinner';
+import { Outlet } from 'react-router-dom';
 import CardResults from './card-results/CardResults';
 import { useAppSelector } from '../../../redux/hooks';
 
 export default function ListResults() {
-  const navigation = useNavigation();
-
   const itemsPerPage = useAppSelector(
     (state) => state.itemsPerPage.itemsPerPage
   );
@@ -25,13 +22,9 @@ export default function ListResults() {
             <span>No Results</span>
           )}
         </nav>
-        {navigation.state === 'loading' ? (
-          <Spinner />
-        ) : (
-          <div className={style.detail}>
-            <Outlet />
-          </div>
-        )}
+        <div className={style.detail}>
+          <Outlet />
+        </div>
       </div>
     </>
   );
