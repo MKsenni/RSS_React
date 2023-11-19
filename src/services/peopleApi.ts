@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { baseUrl } from './actions';
 import { PeopleResponse } from './types';
+import { baseUrl } from '../data/constants';
 
 type QueryProps = {
   page: number;
