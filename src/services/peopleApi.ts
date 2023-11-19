@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseUrl } from './actions';
 import { PeopleResponse } from './types';
 
-export type QueryProps = {
+type QueryProps = {
   page: number;
   searchWord: string;
 };

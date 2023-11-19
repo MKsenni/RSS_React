@@ -47,7 +47,9 @@ button {
   border-style: none;
 }
 
-:focus, :active, :hover {
+:focus,
+:active,
+:hover {
   outline: none;
   outline-offset: 0;
 }
