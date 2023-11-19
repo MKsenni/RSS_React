@@ -9,20 +9,23 @@ import Spinner from '../spiner/Spinner';
 
 export default function Results() {
   const page: number = useAppSelector((state) => state.currentPage.pageNum);
-  const { data, isLoading, isFetching } = useGetPeopleQuery(
-    page ? Number(page) : 1
+  const searchWord: string | null = useAppSelector(
+    (state) => state.searchWord.searchWord
   );
+  const countPerPage = useAppSelector(
+    (state) => state.currentPage.countPerPage
+  );
+  const { data, isLoading, isFetching } = useGetPeopleQuery({
+    page: page ?? 1,
+    searchWord: searchWord ?? '',
+  });
 
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(updateItems(data?.results));
-    console.log(data);
   }, [data]);
 
   const totalItems = data?.count;
-  const countPerPage = useAppSelector(
-    (state) => state.currentPage.countPerPage
-  );
   if (!totalItems) return <Spinner />;
   const totalPage = Math.ceil(totalItems / countPerPage);
 

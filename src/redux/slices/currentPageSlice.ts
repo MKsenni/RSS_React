@@ -3,13 +3,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface ICurrentPage {
   pageNum: number;
   countPerPage: number;
-  totalPage: number | null;
 }
 
 const initialState: ICurrentPage = {
   pageNum: 1,
   countPerPage: 10,
-  totalPage: null,
 };
 
 export const currentPageSlice = createSlice({
@@ -28,13 +26,10 @@ export const currentPageSlice = createSlice({
     setCountPerPage: (state, action: PayloadAction<number>) => {
       state.countPerPage = action.payload;
     },
-    setTotalPage: (state, action: PayloadAction<number>) => {
-      state.totalPage = action.payload;
-    },
   },
 });
 
-export const { nextPage, prevPage, setPage, setCountPerPage, setTotalPage } =
+export const { nextPage, prevPage, setPage, setCountPerPage } =
   currentPageSlice.actions;
 
 export default currentPageSlice.reducer;
