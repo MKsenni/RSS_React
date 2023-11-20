@@ -1,29 +1,50 @@
 import style from './results.module.css';
-import { useLoaderData, useNavigation } from 'react-router-dom';
-import Spinner from '../spiner/Spinner';
 import ListResults from './list-results/ListResults';
-import { loaderApp } from '../../routes/loaders';
 import Pagination from '../pagination/Pagination';
-import { ResultsPeopleContext } from '../../context';
+import { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../redux/hooks';
+import { updateItems } from '../../redux/slices/itemsPerPageSlice';
+import { useGetPeopleQuery } from '../../services/peopleApi';
+import Spinner from '../spiner/Spinner';
+import { setLoadingMainPage } from '../../redux/slices/loadingFlagsSlice';
 
 export default function Results() {
-  const people = useLoaderData() as Awaited<ReturnType<typeof loaderApp>>;
+  const page: number = useAppSelector((state) => state.currentPage.pageNum);
+  const searchWord: string | null = useAppSelector(
+    (state) => state.searchWord.searchWord
+  );
+  const countPerPage = useAppSelector(
+    (state) => state.currentPage.countPerPage
+  );
+  const loadingMainPage = useAppSelector(
+    (state) => state.loadingFlags.mainPageLoading
+  );
+  const { data, isFetching } = useGetPeopleQuery({
+    page: page ?? 1,
+    searchWord: searchWord ?? '',
+  });
 
-  const navigation = useNavigation();
-  const searching =
-    navigation.location &&
-    new URLSearchParams(navigation.location.search).has('search');
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(updateItems(data?.results));
+  }, [data]);
+
+  useEffect(() => {
+    dispatch(setLoadingMainPage(isFetching));
+  }, [isFetching]);
+
+  const totalItems = data?.count;
+  if (!totalItems) return <Spinner />;
+  const totalPage = Math.ceil(totalItems / countPerPage);
 
   return (
     <section className={style.results}>
-      {searching ? (
+      {loadingMainPage ? (
         <Spinner />
       ) : (
         <>
-          <ResultsPeopleContext.Provider value={people ? people : null}>
-            <ListResults />
-            <Pagination />
-          </ResultsPeopleContext.Provider>
+          <ListResults />
+          <Pagination totalPage={totalPage} />
         </>
       )}
     </section>

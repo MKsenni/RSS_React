@@ -1,27 +1,20 @@
 import style from './listResults.module.css';
-import { Outlet, useNavigation } from 'react-router-dom';
-import Spinner from '../../spiner/Spinner';
-import { useContext, useEffect, useState } from 'react';
-import { ResultsPeopleContext } from '../../../context';
-import { PeopleResponse } from '../../../services/actions';
+import { Outlet } from 'react-router-dom';
 import CardResults from './card-results/CardResults';
+import { useAppSelector } from '../../../redux/hooks';
 
 export default function ListResults() {
-  const people: PeopleResponse | null = useContext(ResultsPeopleContext);
-  const [searchResult, setSearchResult] = useState(people?.results);
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    setSearchResult(people?.results);
-  }, [people]);
+  const itemsPerPage = useAppSelector(
+    (state) => state.itemsPerPage.itemsPerPage
+  );
 
   return (
     <>
       <div className={style.list}>
         <nav className={style.navigation}>
-          {searchResult?.length ? (
+          {itemsPerPage?.length ? (
             <ul className={style.cards}>
-              {searchResult.map((hero, index) => {
+              {itemsPerPage.map((hero, index) => {
                 return <CardResults key={index} hero={hero} />;
               })}
             </ul>
@@ -29,13 +22,9 @@ export default function ListResults() {
             <span>No Results</span>
           )}
         </nav>
-        {navigation.state === 'loading' ? (
-          <Spinner />
-        ) : (
-          <div className={style.detail}>
-            <Outlet />
-          </div>
-        )}
+        <div className={style.detail}>
+          <Outlet />
+        </div>
       </div>
     </>
   );
