@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
-import { ResultsPeopleContext } from '../../../context';
 import ListResults from './ListResults';
 import { cleanup, render, screen } from '@testing-library/react';
-import { mockResults } from '../../../data/data-mocks';
 import { MemoryRouter } from 'react-router-dom';
+import { store } from '../../../redux/store';
+import { Provider } from 'react-redux';
 
 const mockUseNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -22,9 +22,9 @@ afterEach(cleanup);
 describe('ListResults component', () => {
   it('Check that an appropriate message is displayed if no cards are present', () => {
     render(
-      <ResultsPeopleContext.Provider value={null}>
+      <Provider store={store}>
         <ListResults />
-      </ResultsPeopleContext.Provider>
+      </Provider>
     );
 
     expect(screen.getByText('No Results')).toBeInTheDocument();
@@ -32,11 +32,11 @@ describe('ListResults component', () => {
   it('Verify that the component renders the specified number of cards', () => {
     const lengthResults = 6;
     render(
-      <MemoryRouter>
-        <ResultsPeopleContext.Provider value={mockResults}>
+      <Provider store={store}>
+        <MemoryRouter>
           <ListResults />
-        </ResultsPeopleContext.Provider>
-      </MemoryRouter>
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getAllByRole('listitem')).toHaveLength(lengthResults);

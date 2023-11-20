@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { ResultsPeopleContext } from '../../../../context';
 import { mockResults } from '../../../../data/data-mocks';
 import ListResults from '../ListResults';
 import Card from '../../../card/Card';
+import { store } from '../../../../redux/store';
+import { Provider } from 'react-redux';
 
 const mockUseNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -52,11 +53,11 @@ afterEach(cleanup);
 describe('CardResults component', () => {
   it('Ensure that the card component renders the relevant card data', () => {
     render(
-      <MemoryRouter>
-        <ResultsPeopleContext.Provider value={mockResults}>
+      <Provider store={store}>
+        <MemoryRouter>
           <ListResults />
-        </ResultsPeopleContext.Provider>
-      </MemoryRouter>
+        </MemoryRouter>
+      </Provider>
     );
 
     mockResults.results.forEach((people) => {
@@ -65,14 +66,14 @@ describe('CardResults component', () => {
   });
   it('Validate that clicking on a card opens a detailed card component', () => {
     render(
-      <MemoryRouter>
-        <ResultsPeopleContext.Provider value={mockResults}>
+      <Provider store={store}>
+        <MemoryRouter>
           <ListResults />
           <Routes>
             <Route path="details/Luke Skywalker" element={<Card />} />
           </Routes>
-        </ResultsPeopleContext.Provider>
-      </MemoryRouter>
+        </MemoryRouter>
+      </Provider>
     );
 
     const card = screen.getByText('Luke Skywalker');

@@ -15,6 +15,8 @@ import {
 import App from '../../App';
 import ErrorPage from '../../error-page';
 import Card from '../card/Card';
+import { store } from '../../redux/store';
+import { Provider } from 'react-redux';
 
 const mockUseNavigate = jest.fn().mockReturnValue('');
 jest.mock('react-router-dom', () => ({
@@ -41,7 +43,11 @@ afterEach(cleanup);
 
 describe('Search component', () => {
   it('renders is correctly', () => {
-    render(<RouterProvider router={routerTest} />);
+    render(
+      <Provider store={store}>
+        <RouterProvider router={routerTest} />
+      </Provider>
+    );
 
     const input = screen.getByRole('searchbox');
     const title = screen.getByText('Star Wars');
@@ -50,7 +56,11 @@ describe('Search component', () => {
     expect(title).toBeInTheDocument();
   });
   it('Verify that clicking the Search button saves the entered value to the local storage', () => {
-    render(<RouterProvider router={routerTest} />);
+    render(
+      <Provider store={store}>
+        <RouterProvider router={routerTest} />
+      </Provider>
+    );
 
     const input = screen.getByRole('searchbox');
     fireEvent.change(input, { target: { value: 'Luke' } });
@@ -60,7 +70,11 @@ describe('Search component', () => {
   });
   it('retrieves the value from the local storage upon mounting', async () => {
     global.localStorage.setItem('searchWord', 'Luke');
-    render(<RouterProvider router={routerTest} />);
+    render(
+      <Provider store={store}>
+        <RouterProvider router={routerTest} />
+      </Provider>
+    );
 
     const searchWord = screen.getByDisplayValue('LUKE');
 

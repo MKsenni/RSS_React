@@ -7,10 +7,11 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { ResultsPeopleContext } from '../../context';
 import { mockResults } from '../../data/data-mocks';
 import ListResults from '../results/list-results/ListResults';
 import Card from './Card';
+import { Provider } from 'react-redux';
+import { store } from '../../redux/store';
 
 const mockUseNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -39,19 +40,37 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
+const mockuseGetPersonQuerys = jest.fn().mockReturnValue({
+  name: 'Luke Skywalker',
+  height: '172',
+  mass: '77',
+  birth_year: '19BBY',
+  gender: 'male',
+});
+beforeAll(() => {
+  jest.mock('../../services/peopleApi.ts', () => ({
+    pokemonAPI: {
+      useGetPeopleQuery: jest
+        .fn()
+        .mockReturnValue({ data: mockResults, isLoading: false }),
+      useGetPersonQuery: () => mockuseGetPersonQuerys,
+    },
+  }));
+});
+
 afterEach(cleanup);
 
 describe('Card component', () => {
   it('Check that a loading indicator is displayed while fetching data', () => {
     render(
-      <MemoryRouter>
-        <ResultsPeopleContext.Provider value={mockResults}>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/details/Luke Skywalker']}>
           <ListResults />
           <Routes>
             <Route path="details/:name" element={<Card />} />
           </Routes>
-        </ResultsPeopleContext.Provider>
-      </MemoryRouter>
+        </MemoryRouter>
+      </Provider>
     );
 
     const card = screen.getByText('Luke Skywalker');
@@ -60,14 +79,11 @@ describe('Card component', () => {
   });
   it('Make sure the detailed card component correctly displays the detailed card data', () => {
     render(
-      <MemoryRouter>
-        <ResultsPeopleContext.Provider value={mockResults}>
-          <ListResults />
-          <Routes>
-            <Route path="details/:name" element={<Card />} />
-          </Routes>
-        </ResultsPeopleContext.Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <Card />
+        </MemoryRouter>
+      </Provider>
     );
 
     const card = screen.getByText('Luke Skywalker');
@@ -81,14 +97,14 @@ describe('Card component', () => {
   });
   it('Ensure that clicking the close button hides the component', async () => {
     render(
-      <MemoryRouter initialEntries={['/details/Luke Skywalker']}>
-        <ResultsPeopleContext.Provider value={mockResults}>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/details/Luke Skywalker']}>
           <ListResults />
           <Routes>
             <Route path="details/:name" element={<Card />} />
           </Routes>
-        </ResultsPeopleContext.Provider>
-      </MemoryRouter>
+        </MemoryRouter>
+      </Provider>
     );
     const closeBtn = screen.getByRole('button', { name: 'X' });
     expect(closeBtn).toBeInTheDocument();

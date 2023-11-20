@@ -9,6 +9,8 @@ import { screen, render, cleanup } from '@testing-library/react';
 import ErrorPage from './error-page';
 import Card from './components/card/Card';
 import App from './App';
+import { store } from './redux/store';
+import { Provider } from 'react-redux';
 
 jest.mock('@/components/card/Card');
 jest.mock('@/App.tsx');
@@ -27,7 +29,11 @@ afterEach(cleanup);
 
 describe('ErrorPage component', () => {
   it('rendering if request is invalid with ErrorResponse', () => {
-    render(<RouterProvider router={routerTest} />);
+    render(
+      <Provider store={store}>
+        <RouterProvider router={routerTest} />
+      </Provider>
+    );
 
     expect(screen.getByText('Something went wrong!')).toBeInTheDocument();
     expect(screen.getByText('404')).toBeInTheDocument();

@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import Pagination from './Pagination';
-import { mockResults } from '../../data/data-mocks';
-import { ResultsPeopleContext, SearchWordContext } from '../../context';
+import { Provider } from 'react-redux';
+import { store } from '../../redux/store';
 
 const mockUseNavigate = jest.fn().mockReturnValue('');
 jest.mock('react-router-dom', () => ({
@@ -15,9 +15,9 @@ afterEach(cleanup);
 describe('Pagination component', () => {
   it('renders is correctly', () => {
     render(
-      <ResultsPeopleContext.Provider value={mockResults}>
-        <Pagination />
-      </ResultsPeopleContext.Provider>
+      <Provider store={store}>
+        <Pagination totalPage={10} />
+      </Provider>
     );
 
     const prevBtn = screen.getByText('prev');
@@ -35,11 +35,9 @@ describe('Pagination component', () => {
 
   it('Make sure the component updates URL query parameter when page changes with searchword', () => {
     render(
-      <SearchWordContext.Provider value="searchword">
-        <ResultsPeopleContext.Provider value={mockResults}>
-          <Pagination />
-        </ResultsPeopleContext.Provider>
-      </SearchWordContext.Provider>
+      <Provider store={store}>
+        <Pagination totalPage={10} />
+      </Provider>
     );
 
     const nextBtn = screen.getByText('next');
@@ -51,9 +49,9 @@ describe('Pagination component', () => {
   });
   it('Make sure the component updates URL query parameter when page changes without searchword', () => {
     render(
-      <ResultsPeopleContext.Provider value={mockResults}>
-        <Pagination />
-      </ResultsPeopleContext.Provider>
+      <Provider store={store}>
+        <Pagination totalPage={10} />
+      </Provider>
     );
 
     const nextBtn = screen.getByText('next');
