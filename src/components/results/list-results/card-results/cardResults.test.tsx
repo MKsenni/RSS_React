@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { mockResults } from '../../../../data/data-mocks';
+import { mockResults } from '../../../../__mocks__/data-mocks';
 import ListResults from '../ListResults';
 import Card from '../../../card/Card';
 import { store } from '../../../../redux/store';

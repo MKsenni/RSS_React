@@ -5,7 +5,7 @@ export interface ISearchWordStore {
 }
 
 const initialState: ISearchWordStore = {
-  searchWord: '' || localStorage.getItem('searchWord'),
+  searchWord: localStorage.getItem('searchWord') || '',
 };
 
 export const searchWordSlice = createSlice({
