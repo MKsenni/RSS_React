@@ -1,5 +1,5 @@
 import style from './listResults.module.css';
-import { Outlet } from 'react-router-dom';
+// import { Outlet } from 'react-router-dom';
 import CardResults from './card-results/CardResults';
 import { useAppSelector } from '../../../redux/hooks';
 
@@ -22,9 +22,7 @@ export default function ListResults() {
             <span>No Results</span>
           )}
         </nav>
-        <div className={style.detail}>
-          <Outlet />
-        </div>
+        <div className={style.detail}>{/* <Outlet /> */}</div>
       </div>
     </>
   );

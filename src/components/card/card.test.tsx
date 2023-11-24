@@ -10,8 +10,8 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ListResults from '../results/list-results/ListResults';
 import Card from './Card';
 import { Provider } from 'react-redux';
-import { store } from '../../__mocks__/mockStore';
-import { mockResults } from '../../__mocks__/data-mocks';
+import { store } from '../../../__mocks__/mockStore';
+import { mockResults } from '../../../__mocks__/data-mocks';
 
 const mockUseNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({

@@ -1,21 +1,15 @@
+import Link from 'next/link';
 import { PersonProps } from '../../../../services/types';
 import style from '../listResults.module.css';
-import { NavLink, useLocation } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 
 export default function CardResults({ hero }: { hero: PersonProps }) {
-  const { search } = useLocation();
+  // const { search } = useLocation();
 
   return (
     <>
       <li className={style.link}>
-        <NavLink
-          className={({ isActive, isPending }) =>
-            isActive ? 'active' : isPending ? 'pending' : ''
-          }
-          to={`details/${hero.name}` + search}
-        >
-          {hero.name}
-        </NavLink>
+        <Link href={`details/${hero.name}`}>{hero.name}</Link>
       </li>
     </>
   );

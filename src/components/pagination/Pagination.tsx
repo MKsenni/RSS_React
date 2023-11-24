@@ -1,6 +1,5 @@
 import style from './pagination.module.css';
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   prevPage,
@@ -11,9 +10,9 @@ import {
 
 export default function Pagination({ totalPage }: { totalPage: number }) {
   const dispatch = useAppDispatch();
-  const word: string | null = useAppSelector(
-    (state) => state.searchWord.searchWord
-  );
+  // const word: string | null = useAppSelector(
+  //   (state) => state.searchWord.searchWord
+  // );
 
   const currentPage = useAppSelector((state) => state.currentPage.pageNum);
 
@@ -21,22 +20,22 @@ export default function Pagination({ totalPage }: { totalPage: number }) {
     (state) => state.currentPage.countPerPage
   );
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    if (word) {
-      const params = new URLSearchParams();
-      params.set('page', currentPage.toString());
-      params.set('limit', countPerPage.toString());
-      params.set('search', word);
-      navigate(`?${params.toString()}`);
-    } else {
-      const params = new URLSearchParams();
-      params.set('page', currentPage.toString());
-      params.set('limit', countPerPage.toString());
-      navigate(`?${params.toString()}`);
-    }
-  }, [currentPage, countPerPage]);
+  // useEffect(() => {
+  //   if (word) {
+  //     const params = new URLSearchParams();
+  //     params.set('page', currentPage.toString());
+  //     params.set('limit', countPerPage.toString());
+  //     params.set('search', word);
+  //     navigate(`?${params.toString()}`);
+  //   } else {
+  //     const params = new URLSearchParams();
+  //     params.set('page', currentPage.toString());
+  //     params.set('limit', countPerPage.toString());
+  //     navigate(`?${params.toString()}`);
+  //   }
+  // }, [currentPage, countPerPage]);
 
   const prevBtn = () => {
     dispatch(prevPage());

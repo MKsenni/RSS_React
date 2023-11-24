@@ -12,6 +12,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  height: 100vh;
+  padding: 2rem;
+  text-align: center;
 }
 
 a {
@@ -23,12 +32,26 @@ a:hover {
   color: #535bf2;
 }
 
-body {
+/* body {
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+} */
+
+body,
+html {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: 'Droid Sans', arial, verdana, sans-serif;
+  font-weight: 700;
+  color: #ff6;
+  background: black url('https://s3.amazonaws.com/csstarwars/background.png');
+  overflow: auto;
 }
 
 h1 {
@@ -52,6 +75,36 @@ button {
 :hover {
   outline: none;
   outline-offset: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  opacity: 1;
+  padding: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: rgba(90, 17, 122, 0.63);
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+li {
+  margin: 0.25rem 0;
+}
+
+a {
+  color: rgba(90, 17, 122, 0.63);
+  transition: 0.3s;
 }
 
 @media (prefers-color-scheme: light) {
