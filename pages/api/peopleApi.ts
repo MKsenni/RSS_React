@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { PeopleResponse } from './types';
-import { baseUrl } from '../data/constants';
+import { PeopleResponse } from '../../lib/data/types';
+import { baseUrl } from '../../lib/data/constants';
 import { HYDRATE } from 'next-redux-wrapper';
 
 type QueryProps = {
@@ -26,4 +26,8 @@ export const peopleApi = createApi({
   }),
 });
 
-export const { useGetPeopleQuery, useGetPersonQuery } = peopleApi;
+export const {
+  useGetPeopleQuery,
+  useGetPersonQuery,
+  util: { getRunningQueriesThunk },
+} = peopleApi;

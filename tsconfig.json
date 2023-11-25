@@ -33,6 +33,6 @@
     "**/*.tsx",
     "**/*.ts",
     "*.module.css"
-  ],
+, "redux/slices"  ],
   "exclude": ["./node_modules"]
 }

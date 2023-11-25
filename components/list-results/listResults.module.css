@@ -41,15 +41,3 @@
 .link a.pending {
   color: rgba(82, 64, 90, 0.63);
 }
-
-.detail {
-  flex: 1;
-  padding: 2rem 4rem;
-  width: 100%;
-}
-
-.detail.loading {
-  opacity: 0.25;
-  transition: opacity 200ms;
-  transition-delay: 200ms;
-}

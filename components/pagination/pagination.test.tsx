@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import Pagination from './Pagination';
 import { Provider } from 'react-redux';
-import { store } from '../../redux/store';
+import { store } from '../../pages/api/store';
 
 const mockUseNavigate = jest.fn().mockReturnValue('');
 jest.mock('react-router-dom', () => ({

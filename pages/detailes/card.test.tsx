@@ -6,12 +6,10 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import ListResults from '../results/list-results/ListResults';
-import Card from './Card';
+import ListResults from '../../components/list-results/ListResults';
 import { Provider } from 'react-redux';
-import { store } from '../../../__mocks__/mockStore';
-import { mockResults } from '../../../__mocks__/data-mocks';
+import { store } from '../../__mocks__/mockStore';
+import { mockResults } from '../../__mocks__/data-mocks';
 
 const mockUseNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -79,14 +77,9 @@ describe('Card component', () => {
   // });
   it('Check that a loading indicator is displayed while fetching data', () => {
     render(
-      <MemoryRouter initialEntries={['/details/Luke Skywalker']}>
-        <Provider store={store}>
-          <ListResults />
-          <Routes>
-            <Route path="details/:name" element={<Card />} />
-          </Routes>
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <ListResults />
+      </Provider>
     );
 
     const card = screen.getByText('Luke Skywalker');
@@ -96,12 +89,7 @@ describe('Card component', () => {
   it('Make sure the detailed card component correctly displays the detailed card data', async () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/details/Luke Skywalker']}>
-          <ListResults />
-          <Routes>
-            <Route path="details/:name" element={<Card />} />
-          </Routes>
-        </MemoryRouter>
+        <ListResults />
       </Provider>
     );
 
@@ -119,12 +107,7 @@ describe('Card component', () => {
   it('Ensure that clicking the close button hides the component', async () => {
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/details/Luke Skywalker']}>
-          <ListResults />
-          <Routes>
-            <Route path="details/:name" element={<Card />} />
-          </Routes>
-        </MemoryRouter>
+        <ListResults />
       </Provider>
     );
     const closeBtn = screen.getByRole('button', { name: 'X' });

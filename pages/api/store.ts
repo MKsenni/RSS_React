@@ -1,9 +1,9 @@
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
-import searchWordReducer from './slices/searchWordSlice';
-import itemsPerPageReducer from './slices/itemsPerPageSlice';
-import { peopleApi } from '../services/peopleApi';
-import currentPageReducer from './slices/currentPageSlice';
-import loadingFlagsReducer from './slices/loadingFlagsSlice';
+import searchWordReducer from '../../redux/slices/searchWordSlice';
+import itemsPerPageReducer from '../../redux/slices/itemsPerPageSlice';
+import { peopleApi } from './peopleApi';
+import currentPageReducer from '../../redux/slices/currentPageSlice';
+import loadingFlagsReducer from '../../redux/slices/loadingFlagsSlice';
 import { MakeStore, createWrapper } from 'next-redux-wrapper';
 
 // type Reducers = {
@@ -24,10 +24,6 @@ import { MakeStore, createWrapper } from 'next-redux-wrapper';
 
 // const reducer = combineReducers(reducers);
 
-export const makeStore: MakeStore<typeof store> = () => store;
-
-export const wrapper = createWrapper<AppStore>(makeStore, { debug: true });
-
 export const store = configureStore({
   reducer: {
     searchWord: searchWordReducer,
@@ -40,13 +36,19 @@ export const store = configureStore({
     getDefaultMiddleware().concat(peopleApi.middleware),
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export const makeStore: MakeStore<typeof store> = () => store;
+
+export const wrapper = createWrapper<AppStore>(makeStore, { debug: true });
+
+// export type RootState = ReturnType<typeof store.getState>;
+// export type AppDispatch = typeof store.dispatch;
+
 export type AppStore = ReturnType<typeof makeStore>;
-export type AppState = ReturnType<AppStore['getState']>;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
-  AppState,
+  RootState,
   unknown,
   Action
 >;

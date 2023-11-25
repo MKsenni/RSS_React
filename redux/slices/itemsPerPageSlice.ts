@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { PersonProps } from '../../services/types';
+import { PersonProps } from '../../lib/data/types';
 
 export interface IItemsPerPageStore {
   itemsPerPage?: PersonProps[];

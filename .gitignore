@@ -25,3 +25,10 @@ dist-ssr
 
 #testing
 /coverage
+
+# Next.js build output
+.next
+
+# next.js
+/.next/
+/out/

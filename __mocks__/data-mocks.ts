@@ -1,4 +1,4 @@
-import { baseUrl } from '../src/data/constants';
+import { baseUrl } from '../lib/data/constants';
 
 export const mockPeople = [
   {

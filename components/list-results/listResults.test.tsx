@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import ListResults from './ListResults';
 import { cleanup, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { store } from '../../../redux/store';
+import { store } from '../../pages/api/store';
 import { Provider } from 'react-redux';
 
 const mockUseNavigate = jest.fn();
