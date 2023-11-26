@@ -15,7 +15,14 @@ export default function ListResults() {
             <ul className={style.cards}>
               {itemsPerPage.map((hero, index) => (
                 <li key={index} className={style.link}>
-                  <Link href={`details/${hero.name}`}>{hero.name}</Link>
+                  <Link
+                    href={{
+                      pathname: '/details/[name]',
+                      query: { name: `${hero.name}` },
+                    }}
+                  >
+                    {hero.name}
+                  </Link>
                 </li>
               ))}
             </ul>

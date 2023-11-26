@@ -42,5 +42,6 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     'no-empty': ['error', { allowEmptyCatch: true }],
+    'react-refresh/only-export-components': 'off',
   },
 };

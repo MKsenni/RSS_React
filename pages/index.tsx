@@ -1,22 +1,23 @@
-import style from './index.module.css';
+import style from './page/index.module.css';
+import { useEffect } from 'react';
 import ListResults from '../components/list-results/ListResults';
 import Pagination from '../components/pagination/Pagination';
-import { useEffect } from 'react';
+import Spinner from '../components/spiner/Spinner';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { updateItems } from '../redux/slices/itemsPerPageSlice';
-import {
-  getRunningQueriesThunk,
-  peopleApi,
-  useGetPeopleQuery,
-} from './api/peopleApi';
-import Spinner from '../components/spiner/Spinner';
 import { setLoadingMainPage } from '../redux/slices/loadingFlagsSlice';
+import {
+  useGetPeopleQuery,
+  peopleApi,
+  getRunningQueriesThunk,
+} from './api/peopleApi';
 import { wrapper } from './api/store';
-import { GetServerSidePropsContext, PreviewData } from 'next';
-import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
+import { INITIAL_PAGE } from '../lib/data/constants';
 
 export default function Page() {
-  const page: number = useAppSelector((state) => state.currentPage.pageNum);
+  console.log('render index');
+  const page = INITIAL_PAGE;
+
   const searchWord: string | null = useAppSelector(
     (state) => state.searchWord.searchWord
   );
@@ -27,7 +28,7 @@ export default function Page() {
     (state) => state.loadingFlags.mainPageLoading
   );
   const { data, isFetching } = useGetPeopleQuery({
-    page: page ?? 1,
+    page: typeof page === 'string' ? Number(page) : 1,
     searchWord: searchWord ?? '',
   });
 
@@ -59,31 +60,15 @@ export default function Page() {
 }
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  (store) =>
-    async (
-      context: GetServerSidePropsContext<NextParsedUrlQuery, PreviewData>
-    ) => {
-      const page = context.query.page;
-      const searchWord = context.query.search;
-      if (!searchWord && typeof page === 'string') {
-        store.dispatch(
-          peopleApi.endpoints.getPeople.initiate({
-            page: Number(page),
-            searchWord: '',
-          })
-        );
-      }
-      if (typeof searchWord === 'string') {
-        store.dispatch(
-          peopleApi.endpoints.getPeople.initiate({
-            page: Number(page),
-            searchWord: searchWord,
-          })
-        );
-      }
-      await Promise.all(store.dispatch(getRunningQueriesThunk()));
-      // const res = await fetch('https://api.github.com/repos/vercel/next.js');
-      // const repo = await res.json();
-      return { props: {} };
-    }
+  (store) => async () => {
+    store.dispatch(
+      peopleApi.endpoints.getPeople.initiate({
+        page: Number(INITIAL_PAGE),
+        searchWord: '',
+      })
+    );
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+
+    return { props: {} };
+  }
 );

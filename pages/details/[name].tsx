@@ -1,17 +1,29 @@
 import style from './card.module.css';
 import { PersonProps } from '../../lib/data/types';
-import { useGetPersonQuery } from '../api/peopleApi';
+import {
+  getRunningQueriesThunk,
+  peopleApi,
+  useGetPersonQuery,
+} from '../api/peopleApi';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setLoadingDetailsPage } from '../../redux/slices/loadingFlagsSlice';
 import { useEffect } from 'react';
 import Spinner from '../../components/spiner/Spinner';
 import { useRouter } from 'next/router';
+import { wrapper } from '../api/store';
+import { GetServerSidePropsContext } from 'next';
+import { skipToken } from '@reduxjs/toolkit/query';
 
 export default function Card() {
   const router = useRouter();
 
-  const name = router.query.name?.toString();
-  const { data, isFetching } = useGetPersonQuery(name ? name : '');
+  const name = router.query.name;
+  const { data, isFetching } = useGetPersonQuery(
+    typeof name === 'string' ? name : skipToken,
+    {
+      skip: router.isFallback,
+    }
+  );
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -57,3 +69,15 @@ export default function Card() {
     </>
   );
 }
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async (context: GetServerSidePropsContext) => {
+    const searchWord = context.params?.name;
+    if (typeof searchWord === 'string') {
+      store.dispatch(peopleApi.endpoints.getPerson.initiate(searchWord));
+    }
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+
+    return { props: {} };
+  }
+);

@@ -9,13 +9,13 @@ type QueryProps = {
 };
 
 export const peopleApi = createApi({
-  reducerPath: 'peopleApi',
   baseQuery: fetchBaseQuery({ baseUrl: baseUrl }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
     }
   },
+  tagTypes: [],
   endpoints: (build) => ({
     getPeople: build.query<PeopleResponse, QueryProps>({
       query: ({ page, searchWord }) => `/?page=${page}&search=${searchWord}`,

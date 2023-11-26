@@ -7,47 +7,36 @@ import {
   setPage,
   setCountPerPage,
 } from '../../redux/slices/currentPageSlice';
+import { useRouter } from 'next/router';
+import { INITIAL_PAGE } from '../../lib/data/constants';
 
 export default function Pagination({ totalPage }: { totalPage: number }) {
+  const router = useRouter();
   const dispatch = useAppDispatch();
-  // const word: string | null = useAppSelector(
-  //   (state) => state.searchWord.searchWord
-  // );
 
-  const currentPage = useAppSelector((state) => state.currentPage.pageNum);
+  const page = router.query.page;
+  const numNextPage = page ? Number(page) + 1 : 2;
+  const numPrevPage = page ? (page !== '1' ? Number(page) - 1 : null) : null;
 
   const countPerPage = useAppSelector(
     (state) => state.currentPage.countPerPage
   );
 
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (word) {
-  //     const params = new URLSearchParams();
-  //     params.set('page', currentPage.toString());
-  //     params.set('limit', countPerPage.toString());
-  //     params.set('search', word);
-  //     navigate(`?${params.toString()}`);
-  //   } else {
-  //     const params = new URLSearchParams();
-  //     params.set('page', currentPage.toString());
-  //     params.set('limit', countPerPage.toString());
-  //     navigate(`?${params.toString()}`);
-  //   }
-  // }, [currentPage, countPerPage]);
-
   const prevBtn = () => {
     dispatch(prevPage());
+    router.push(`/page/${numPrevPage}/?limit=${countPerPage}`);
   };
 
   const nextBtn = () => {
     dispatch(nextPage());
+    router.push(`/page/${numNextPage}/?limit=${countPerPage}`);
   };
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    dispatch(setCountPerPage(Number(event.target.value)));
-    dispatch(setPage(1));
+    const currentCountPerPage = Number(event.target.value);
+    dispatch(setCountPerPage(currentCountPerPage));
+    dispatch(setPage(INITIAL_PAGE));
+    router.push(`/page/${INITIAL_PAGE}/?limit=${currentCountPerPage}`);
   };
 
   return (
@@ -57,15 +46,15 @@ export default function Pagination({ totalPage }: { totalPage: number }) {
           <button
             className={style.button}
             onClick={prevBtn}
-            disabled={currentPage > 1 ? false : true}
+            disabled={!numPrevPage}
           >
             prev
           </button>
-          <span>{currentPage}</span>
+          <span>{page ? page : 1}</span>
           <button
             className={style.button}
             onClick={nextBtn}
-            disabled={totalPage === currentPage ? true : false}
+            disabled={totalPage < numNextPage}
           >
             next
           </button>

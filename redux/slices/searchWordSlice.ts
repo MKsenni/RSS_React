@@ -13,7 +13,6 @@ export const searchWordSlice = createSlice({
   initialState,
   reducers: {
     setWord: (state, action: PayloadAction<string>) => {
-      localStorage.setItem('searchWord', action.payload);
       state.searchWord = action.payload;
     },
   },
