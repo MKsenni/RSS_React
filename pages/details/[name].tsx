@@ -5,7 +5,6 @@ import {
   peopleApi,
   useGetPersonQuery,
 } from '../api/peopleApi';
-import Spinner from '../../components/spiner/Spinner';
 import { useRouter } from 'next/router';
 import { wrapper } from '../api/store';
 import { GetServerSidePropsContext } from 'next';
@@ -15,7 +14,7 @@ export default function Card() {
   const router = useRouter();
 
   const name = router.query.name;
-  const { data, isLoading } = useGetPersonQuery(
+  const { data } = useGetPersonQuery(
     typeof name === 'string' ? name : skipToken,
     {
       skip: router.isFallback,
@@ -25,8 +24,6 @@ export default function Card() {
   const handleClose = (): void => {
     router.back();
   };
-
-  if (isLoading) return <Spinner />;
 
   return (
     <>

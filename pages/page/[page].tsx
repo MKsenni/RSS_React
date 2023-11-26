@@ -25,7 +25,7 @@ export default function Page() {
     (state) => state.currentPage.countPerPage
   );
 
-  const { data, isLoading } = useGetPeopleQuery({
+  const { data } = useGetPeopleQuery({
     page: typeof page === 'string' ? Number(page) : 1,
     searchWord: searchWord ?? '',
   });
@@ -41,14 +41,10 @@ export default function Page() {
 
   return (
     <section className={style.results}>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <>
-          <ListResults />
-          <Pagination totalPage={totalPage} />
-        </>
-      )}
+      <>
+        <ListResults />
+        <Pagination totalPage={totalPage} />
+      </>
     </section>
   );
 }
