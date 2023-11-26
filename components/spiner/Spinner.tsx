@@ -1,7 +1,9 @@
+import Image from 'next/image';
+
 export default function Spinner() {
   return (
     <>
-      <img
+      <Image
         width={60}
         height={60}
         src="/spinner.gif"

@@ -1,12 +1,7 @@
 import style from './pagination.module.css';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import {
-  prevPage,
-  nextPage,
-  setPage,
-  setCountPerPage,
-} from '../../redux/slices/currentPageSlice';
+import { setCountPerPage } from '../../redux/slices/currentPageSlice';
 import { useRouter } from 'next/router';
 import { INITIAL_PAGE } from '../../lib/data/constants';
 
@@ -23,19 +18,16 @@ export default function Pagination({ totalPage }: { totalPage: number }) {
   );
 
   const prevBtn = () => {
-    dispatch(prevPage());
     router.push(`/page/${numPrevPage}/?limit=${countPerPage}`);
   };
 
   const nextBtn = () => {
-    dispatch(nextPage());
     router.push(`/page/${numNextPage}/?limit=${countPerPage}`);
   };
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const currentCountPerPage = Number(event.target.value);
     dispatch(setCountPerPage(currentCountPerPage));
-    dispatch(setPage(INITIAL_PAGE));
     router.push(`/page/${INITIAL_PAGE}/?limit=${currentCountPerPage}`);
   };
 

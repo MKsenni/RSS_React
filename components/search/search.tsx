@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import router from 'next/router';
 import { INITIAL_PAGE } from '../../lib/data/constants';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import { setPage } from '../../redux/slices/currentPageSlice';
 import { setWord } from '../../redux/slices/searchWordSlice';
 
 export default function Search() {
@@ -20,10 +19,12 @@ export default function Search() {
 
   const applySearchWord = (searchWord: string | null) => {
     dispatch(setWord(searchWord ?? ''));
-    dispatch(setPage(INITIAL_PAGE));
     searchWord
-      ? router.push(`/page/1/detailes/${searchWord}/?limit=10`)
-      : router.push(`/page/1/?limit=10`);
+      ? router.push({
+          pathname: '/',
+          query: { search: `${searchWord}`, limit: '10' },
+        })
+      : router.push(`/page/${INITIAL_PAGE}/?limit=10`);
   };
 
   const handleClickEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {

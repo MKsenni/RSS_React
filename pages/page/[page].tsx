@@ -10,7 +10,6 @@ import {
   useGetPeopleQuery,
 } from '../api/peopleApi';
 import Spinner from '../../components/spiner/Spinner';
-import { setLoadingMainPage } from '../../redux/slices/loadingFlagsSlice';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { wrapper } from '../api/store';
@@ -18,8 +17,6 @@ import { wrapper } from '../api/store';
 export default function Page() {
   const router = useRouter();
   const page = router.query.page;
-  console.log(page);
-  console.log('render [page]');
 
   const searchWord: string | null = useAppSelector(
     (state) => state.searchWord.searchWord
@@ -27,10 +24,8 @@ export default function Page() {
   const countPerPage = useAppSelector(
     (state) => state.currentPage.countPerPage
   );
-  const loadingMainPage = useAppSelector(
-    (state) => state.loadingFlags.mainPageLoading
-  );
-  const { data, isFetching } = useGetPeopleQuery({
+
+  const { data, isLoading } = useGetPeopleQuery({
     page: typeof page === 'string' ? Number(page) : 1,
     searchWord: searchWord ?? '',
   });
@@ -40,17 +35,13 @@ export default function Page() {
     dispatch(updateItems(data?.results));
   }, [data]);
 
-  useEffect(() => {
-    dispatch(setLoadingMainPage(isFetching));
-  }, [isFetching]);
-
   const totalItems = data?.count;
   if (!totalItems) return <Spinner />;
   const totalPage = Math.ceil(totalItems / countPerPage);
 
   return (
     <section className={style.results}>
-      {loadingMainPage ? (
+      {isLoading ? (
         <Spinner />
       ) : (
         <>

@@ -5,9 +5,6 @@ import {
   peopleApi,
   useGetPersonQuery,
 } from '../api/peopleApi';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { setLoadingDetailsPage } from '../../redux/slices/loadingFlagsSlice';
-import { useEffect } from 'react';
 import Spinner from '../../components/spiner/Spinner';
 import { useRouter } from 'next/router';
 import { wrapper } from '../api/store';
@@ -18,27 +15,18 @@ export default function Card() {
   const router = useRouter();
 
   const name = router.query.name;
-  const { data, isFetching } = useGetPersonQuery(
+  const { data, isLoading } = useGetPersonQuery(
     typeof name === 'string' ? name : skipToken,
     {
       skip: router.isFallback,
     }
   );
 
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(setLoadingDetailsPage(isFetching));
-  }, [dispatch, isFetching]);
-
-  const loadingDetailPage = useAppSelector(
-    (state) => state.loadingFlags.detailsPageLoading
-  );
-
   const handleClose = (): void => {
     router.back();
   };
 
-  if (loadingDetailPage) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   return (
     <>
