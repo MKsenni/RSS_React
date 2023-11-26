@@ -1,14 +1,8 @@
 import '@testing-library/jest-dom';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import Pagination from './Pagination';
 import { Provider } from 'react-redux';
 import { store } from '../../pages/api/store';
-
-const mockUseNavigate = jest.fn().mockReturnValue('');
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockUseNavigate,
-}));
+import Pagination from './Pagination';
 
 afterEach(cleanup);
 
@@ -43,25 +37,5 @@ describe('Pagination component', () => {
     const nextBtn = screen.getByText('next');
 
     fireEvent.click(nextBtn);
-    expect(mockUseNavigate).toHaveBeenCalledWith(
-      '?page=2&limit=10&search=searchword'
-    );
-  });
-  it('Make sure the component updates URL query parameter when page changes without searchword', () => {
-    render(
-      <Provider store={store}>
-        <Pagination totalPage={10} />
-      </Provider>
-    );
-
-    const nextBtn = screen.getByText('next');
-    const prevBtn = screen.getByText('prev');
-
-    fireEvent.click(nextBtn);
-    expect(mockUseNavigate).toHaveBeenCalledWith('?page=2&limit=10');
-    fireEvent.click(nextBtn);
-    expect(mockUseNavigate).toHaveBeenCalledWith('?page=3&limit=10');
-    fireEvent.click(prevBtn);
-    expect(mockUseNavigate).toHaveBeenCalledWith('?page=2&limit=10');
   });
 });

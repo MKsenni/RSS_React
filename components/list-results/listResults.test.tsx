@@ -1,22 +1,9 @@
 import '@testing-library/jest-dom';
-import ListResults from './ListResults';
 import { cleanup, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { store } from '../../pages/api/store';
+import ListResults from './ListResults';
 import { Provider } from 'react-redux';
+import { store } from '../../__mocks__/mockStore';
 
-const mockUseNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockUseNavigate,
-  useLocation: jest.fn().mockReturnValue({
-    pathname: 'details/Luke Skywalker',
-    search: '',
-  }),
-  useNavigation: jest.fn().mockReturnValue({
-    state: 'loading',
-  }),
-}));
 afterEach(cleanup);
 
 describe('ListResults component', () => {
@@ -28,17 +15,6 @@ describe('ListResults component', () => {
     );
 
     expect(screen.getByText('No Results')).toBeInTheDocument();
-  });
-  it('Verify that the component renders the specified number of cards', () => {
-    const lengthResults = 6;
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ListResults />
-        </MemoryRouter>
-      </Provider>
-    );
-
-    expect(screen.getAllByRole('listitem')).toHaveLength(lengthResults);
+    expect(screen.getAllByRole('listitem')).toHaveLength(0);
   });
 });

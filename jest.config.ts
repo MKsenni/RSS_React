@@ -26,9 +26,9 @@ const config: Config = {
   collectCoverageFrom: [
     '**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
-    '!**/main.tsx',
     '!**/types.ts',
-    '!**/router.tsx',
+    '!**/_document.tsx',
+    '!**/_app.tsx',
     '!**/node_modules/**',
     '!<rootDir>/out/**',
     '!<rootDir>/dist/**',
@@ -118,7 +118,7 @@ const config: Config = {
       '<rootDir>/__mocks__/fileMock.js',
 
     // Handle module aliases
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/pages/$1',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -155,7 +155,7 @@ const config: Config = {
   // rootDir: undefined,
 
   // A list of paths to directories that Jest should use to search for files in
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/pages', '<rootDir>/components'],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
@@ -202,7 +202,11 @@ const config: Config = {
   // testRunner: "jest-circus/runner",
 
   // A map from regular expressions to paths to transformers
-  // transform: undefined,
+  transform: {
+    // Use babel-jest to transpile tests with the next/babel preset
+    // https://jestjs.io/docs/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
+  },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [

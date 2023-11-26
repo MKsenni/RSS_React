@@ -1,8 +1,8 @@
 import style from './layout.module.css';
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import Search from './search/search';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <h1 className={style.title}>

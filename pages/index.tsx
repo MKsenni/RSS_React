@@ -2,7 +2,6 @@ import style from './page/index.module.css';
 import { useEffect } from 'react';
 import ListResults from '../components/list-results/ListResults';
 import Pagination from '../components/pagination/Pagination';
-import Spinner from '../components/spiner/Spinner';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { updateItems } from '../redux/slices/itemsPerPageSlice';
 import {
@@ -33,8 +32,7 @@ export default function Page() {
   }, [data]);
 
   const totalItems = data?.count;
-  if (!totalItems) return <Spinner />;
-  const totalPage = Math.ceil(totalItems / countPerPage);
+  const totalPage = Math.ceil(totalItems! / countPerPage);
 
   return (
     <section className={style.results}>

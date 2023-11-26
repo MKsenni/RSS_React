@@ -9,7 +9,6 @@ import {
   peopleApi,
   useGetPeopleQuery,
 } from '../api/peopleApi';
-import Spinner from '../../components/spiner/Spinner';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { wrapper } from '../api/store';
@@ -36,8 +35,7 @@ export default function Page() {
   }, [data]);
 
   const totalItems = data?.count;
-  if (!totalItems) return <Spinner />;
-  const totalPage = Math.ceil(totalItems / countPerPage);
+  const totalPage = Math.ceil(totalItems! / countPerPage);
 
   return (
     <section className={style.results}>

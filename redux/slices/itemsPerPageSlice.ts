@@ -3,12 +3,10 @@ import { PersonProps } from '../../lib/data/types';
 
 export interface IItemsPerPageStore {
   itemsPerPage?: PersonProps[];
-  isLoading: boolean;
 }
 
 const initialState: IItemsPerPageStore = {
   itemsPerPage: [],
-  isLoading: false,
 };
 
 export const itemsPerPageSlice = createSlice({
@@ -17,7 +15,6 @@ export const itemsPerPageSlice = createSlice({
   reducers: {
     updateItems: (state, action: PayloadAction<PersonProps[] | undefined>) => {
       state.itemsPerPage = action.payload;
-      state.isLoading = true;
     },
   },
 });

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { cleanup, render, screen } from '@testing-library/react';
-import Page from './[page]';
+import Page from './index';
 
 afterEach(cleanup);
 
