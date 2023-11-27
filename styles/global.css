@@ -51,7 +51,6 @@ html {
   font-weight: 700;
   color: #ff6;
   background: black url('https://s3.amazonaws.com/csstarwars/background.png');
-  overflow: auto;
 }
 
 h1 {

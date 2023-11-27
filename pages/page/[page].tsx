@@ -62,7 +62,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     if (typeof searchWord === 'string' && typeof page === 'string') {
       store.dispatch(
         peopleApi.endpoints.getPeople.initiate({
-          page: Number(page),
+          page: 1,
           searchWord: searchWord,
         })
       );

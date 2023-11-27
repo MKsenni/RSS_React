@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { wrapper } from '../api/store';
 import { GetServerSidePropsContext } from 'next';
 import { skipToken } from '@reduxjs/toolkit/query';
+import ListResults from '../../components/list-results/ListResults';
 
 export default function Card() {
   const router = useRouter();
@@ -27,30 +28,32 @@ export default function Card() {
 
   return (
     <>
-      {data?.results &&
-        (data.results.length > 0 ? (
-          data.results.map((person: PersonProps, index: number) => (
-            <div className={style.card} key={index} data-testid="card">
-              <button
-                className={style.button}
-                type="button"
-                onClick={handleClose}
-              >
-                X
-              </button>
-              <div className={style.container}>
-                <span className={style.name}>Name: {person.name}</span>
-                <span className={style.gender}>Gender: {person.gender}</span>
-                <span className={style.birth}>Year: {person.birth_year}</span>
-                <span className={style.mass}>Mass: {person.mass}</span>
-                <span className={style.height}>Height: {person.height}</span>
+      <ListResults>
+        {data?.results &&
+          (data.results.length > 0 ? (
+            data.results.map((person: PersonProps, index: number) => (
+              <div className={style.card} key={index} data-testid="card">
+                <button
+                  className={style.button}
+                  type="button"
+                  onClick={handleClose}
+                >
+                  X
+                </button>
+                <div className={style.container}>
+                  <span className={style.name}>Name: {person.name}</span>
+                  <span className={style.gender}>Gender: {person.gender}</span>
+                  <span className={style.birth}>Year: {person.birth_year}</span>
+                  <span className={style.mass}>Mass: {person.mass}</span>
+                  <span className={style.height}>Height: {person.height}</span>
+                </div>
+                <span className={style.overlay} onClick={handleClose}></span>
               </div>
-              <span className={style.overlay} onClick={handleClose}></span>
-            </div>
-          ))
-        ) : (
-          <span>No Results</span>
-        ))}
+            ))
+          ) : (
+            <span>No Results</span>
+          ))}
+      </ListResults>
     </>
   );
 }

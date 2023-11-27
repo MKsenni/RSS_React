@@ -1,8 +1,9 @@
 import style from './listResults.module.css';
-import { useAppSelector } from '../../redux/hooks';
 import Link from 'next/link';
+import { PropsWithChildren } from 'react';
+import { useAppSelector } from '../../redux/hooks';
 
-export default function ListResults() {
+export default function ListResults({ children }: PropsWithChildren) {
   const itemsPerPage = useAppSelector(
     (state) => state.itemsPerPage.itemsPerPage
   );
@@ -30,6 +31,7 @@ export default function ListResults() {
             <span>No Results</span>
           )}
         </nav>
+        {children}
       </div>
     </>
   );
