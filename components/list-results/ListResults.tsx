@@ -1,20 +1,19 @@
 import style from './listResults.module.css';
 import Link from 'next/link';
-import { PropsWithChildren } from 'react';
-import { useAppSelector } from '../../redux/hooks';
+import { PersonProps } from '../../lib/data/types';
 
-export default function ListResults({ children }: PropsWithChildren) {
-  const itemsPerPage = useAppSelector(
-    (state) => state.itemsPerPage.itemsPerPage
-  );
-
+export default function ListResults({
+  peopleResults,
+}: {
+  peopleResults: PersonProps[] | undefined;
+}) {
   return (
     <>
       <div className={style.list}>
         <nav className={style.navigation}>
-          {itemsPerPage?.length ? (
+          {peopleResults?.length ? (
             <ul className={style.cards}>
-              {itemsPerPage.map((hero, index) => (
+              {peopleResults.map((hero, index) => (
                 <li key={index} className={style.link}>
                   <Link
                     href={{
@@ -31,7 +30,6 @@ export default function ListResults({ children }: PropsWithChildren) {
             <span>No Results</span>
           )}
         </nav>
-        {children}
       </div>
     </>
   );

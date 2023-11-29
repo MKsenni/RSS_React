@@ -1,17 +1,15 @@
 import style from './index.module.css';
 import ListResults from '../../components/list-results/ListResults';
 import Pagination from '../../components/pagination/Pagination';
-import { useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import { updateItems } from '../../redux/slices/itemsPerPageSlice';
+import { useAppSelector } from '../../redux/hooks';
 import {
   getRunningQueriesThunk,
   peopleApi,
   useGetPeopleQuery,
 } from '../api/peopleApi';
-import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { wrapper } from '../api/store';
+import { useRouter } from 'next/router';
 
 export default function Page() {
   const router = useRouter();
@@ -29,18 +27,13 @@ export default function Page() {
     searchWord: searchWord ?? '',
   });
 
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(updateItems(data?.results));
-  }, [data]);
-
   const totalItems = data?.count;
   const totalPage = Math.ceil(totalItems! / countPerPage);
 
   return (
     <section className={style.results}>
       <>
-        <ListResults />
+        <ListResults peopleResults={data?.results} />
         <Pagination totalPage={totalPage} />
       </>
     </section>
@@ -50,17 +43,18 @@ export default function Page() {
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context: GetServerSidePropsContext) => {
     const page = context.params?.page;
-    const searchWord = context.params?.search;
+    const searchWord = context.query.search;
+
     if (!searchWord && typeof page === 'string') {
-      store.dispatch(
+      await store.dispatch(
         peopleApi.endpoints.getPeople.initiate({
           page: Number(page),
           searchWord: '',
         })
       );
     }
-    if (typeof searchWord === 'string' && typeof page === 'string') {
-      store.dispatch(
+    if (typeof searchWord === 'string') {
+      await store.dispatch(
         peopleApi.endpoints.getPeople.initiate({
           page: 1,
           searchWord: searchWord,

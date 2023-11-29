@@ -1,16 +1,15 @@
 import style from './page/index.module.css';
-import { useEffect } from 'react';
 import ListResults from '../components/list-results/ListResults';
 import Pagination from '../components/pagination/Pagination';
-import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import { updateItems } from '../redux/slices/itemsPerPageSlice';
+import { useAppSelector } from '../redux/hooks';
 import {
-  useGetPeopleQuery,
   peopleApi,
   getRunningQueriesThunk,
+  useGetPeopleQuery,
 } from './api/peopleApi';
 import { wrapper } from './api/store';
 import { INITIAL_PAGE } from '../lib/data/constants';
+import { GetServerSidePropsContext } from 'next';
 
 export default function Page() {
   const page = INITIAL_PAGE;
@@ -21,15 +20,11 @@ export default function Page() {
   const countPerPage = useAppSelector(
     (state) => state.currentPage.countPerPage
   );
+
   const { data } = useGetPeopleQuery({
-    page: typeof page === 'string' ? Number(page) : 1,
+    page: page,
     searchWord: searchWord ?? '',
   });
-
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(updateItems(data?.results));
-  }, [data]);
 
   const totalItems = data?.count;
   const totalPage = Math.ceil(totalItems! / countPerPage);
@@ -37,7 +32,7 @@ export default function Page() {
   return (
     <section className={style.results}>
       <>
-        <ListResults />
+        <ListResults peopleResults={data?.results} />
         <Pagination totalPage={totalPage} />
       </>
     </section>
@@ -45,13 +40,20 @@ export default function Page() {
 }
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    store.dispatch(
-      peopleApi.endpoints.getPeople.initiate({
-        page: Number(INITIAL_PAGE),
-        searchWord: '',
-      })
-    );
+  (store) => async (context: GetServerSidePropsContext) => {
+    const searchWord = context.query.search;
+
+    if (typeof searchWord === 'string') {
+      await store.dispatch(peopleApi.endpoints.getPerson.initiate(searchWord));
+    }
+    if (!searchWord) {
+      await store.dispatch(
+        peopleApi.endpoints.getPeople.initiate({
+          page: INITIAL_PAGE,
+          searchWord: '',
+        })
+      );
+    }
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
     return { props: {} };

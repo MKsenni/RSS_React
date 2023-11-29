@@ -1,6 +1,5 @@
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
 import searchWordReducer from '../../redux/slices/searchWordSlice';
-import itemsPerPageReducer from '../../redux/slices/itemsPerPageSlice';
 import { peopleApi } from './peopleApi';
 import currentPageReducer from '../../redux/slices/currentPageSlice';
 import { MakeStore, createWrapper } from 'next-redux-wrapper';
@@ -9,7 +8,6 @@ export const store = configureStore({
   reducer: {
     searchWord: searchWordReducer,
     currentPage: currentPageReducer,
-    itemsPerPage: itemsPerPageReducer,
     [peopleApi.reducerPath]: peopleApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
