@@ -23,7 +23,7 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "strictNullChecks": true,
-    "strictFunctionTypes": false,
+    "strictFunctionTypes": false
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
