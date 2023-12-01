@@ -7,6 +7,9 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'prettier',
     'plugin:prettier/recommended',
+    'plugin:@next/next/recommended',
+    'next',
+    'next/core-web-vitals',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
@@ -17,7 +20,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react-refresh', 'prettier'],
+  plugins: ['react-refresh', 'prettier', 'react-hooks', 'react'],
   rules: {
     'prettier/prettier': 'error',
     'react-refresh/only-export-components': [
@@ -39,5 +42,6 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     'no-empty': ['error', { allowEmptyCatch: true }],
+    'react-refresh/only-export-components': 'off',
   },
 };
