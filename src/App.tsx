@@ -1,12 +1,11 @@
+import { Link } from 'react-router-dom';
 import './App.css';
-import Results from './components/results/Results';
-import Search from './components/search/Search';
 
 export default function App() {
   return (
     <>
-      <Search />
-      <Results />
+      <Link to="useHookForm">useHookForm</Link>
+      <Link to="uncontrolledElements">uncontrolledElements</Link>
     </>
   );
 }

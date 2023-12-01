@@ -21,7 +21,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": false,
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
