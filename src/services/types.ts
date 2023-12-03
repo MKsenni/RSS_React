@@ -12,3 +12,5 @@ export type PeopleResponse = {
   previous: string | null;
   results: PersonProps[];
 };
+
+export type Gender = 'male' | 'female';

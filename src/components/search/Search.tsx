@@ -1,6 +1,6 @@
 import style from './search.module.css';
 import React, { useState } from 'react';
-import { setWord } from '../../redux/slices/searchWordSlice';
+import { setWord } from '../../redux/slices/dataSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setPage } from '../../redux/slices/currentPageSlice';
 import { INITIAL_PAGE } from '../../data/constants';

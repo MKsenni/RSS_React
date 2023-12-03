@@ -5,6 +5,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { selectCountry } from '../../redux/slices/countrySlice';
 import StrengthPassword from '../strengthPassword/StrengthPassword';
+import { useId } from 'react';
+import { Gender } from '../../services/types';
+import { loadData } from '../../redux/slices/dataSlice';
 
 yup.setLocale({
   string: {
@@ -45,12 +48,22 @@ const schema = yup
       .string()
       .required('Required field')
       .oneOf([yup.ref('password')], 'Passwords must matches'),
-    // gender: yup
-    //   .mixed()
-    //   .required('Required field')
-    //   .oneOf(['male', 'female'] as const),
+    gender: yup.mixed<Gender>().required('Required field'),
     country: yup.string().required('Required field'),
-    accept: yup.boolean().required('Required field'),
+    accept: yup.boolean().oneOf([true], 'Accept must be checked').required(),
+    image: yup
+      .mixed<FileList>()
+      .test('fileType', 'Image must be jpeg, png, jpg', (value: FileList) => {
+        return (
+          (value && value[0].type === 'image/jpeg') ||
+          value[0].type === 'image/jpg' ||
+          value[0].type === 'image/png'
+        );
+      })
+      .test('fileSize', 'Image must be less 2 Mb', (value: FileList) => {
+        return value && value[0].size <= 2000000;
+      })
+      .required('Required field'),
   })
   .required('Required field');
 
@@ -59,7 +72,7 @@ const HookForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     reset,
     watch,
   } = useForm<FormData>({
@@ -71,10 +84,20 @@ const HookForm = () => {
 
   const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = (data: FormData) => {
     console.log(data);
     reset();
     dispatch(selectCountry(data.country));
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (e.target) {
+        const base64 = e.target.result as string;
+        const newData = { ...data, image: base64 };
+        dispatch(loadData(newData));
+      }
+    };
+    reader.readAsDataURL(data.image[0]);
     navigate('/');
   };
 
@@ -84,18 +107,20 @@ const HookForm = () => {
 
   const countriesList = useAppSelector((state) => state.countries.countries);
 
-  // const inputs = document.querySelectorAll('input');
-  // inputs.forEach((input) => {
-  //   const name = input.getAttribute('name');
-  //   if (name) {
-  //     if (Object.keys(errors).includes(name)) {
-  //       input.className += 'ring-rose-800 focus:ring-rose-900';
-  //     }
-  //   }
-  // });
-
-  // const hasTrueValue = Object.values(errors).some((value) => value);
   const styleErrorMessage = errors ? 'text-rose-600' : '';
+
+  const [
+    nameId,
+    ageId,
+    emailId,
+    passwordId,
+    confirmPasswordId,
+    maleId,
+    femaleId,
+    countryId,
+    acceptId,
+    imageId,
+  ] = useId();
 
   return (
     <>
@@ -107,32 +132,36 @@ const HookForm = () => {
           <div className="border-b border-gray-900/10 pb-12">
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
-                <label htmlFor="name">Name</label>
-                <input {...register('name')} name="name" />
+                <label htmlFor={nameId}>Name</label>
+                <input {...register('name')} name="name" id={nameId} />
                 {errors.name && (
                   <p className={styleErrorMessage}>{errors.name?.message}</p>
                 )}
               </div>
 
               <div className="sm:col-span-3">
-                <label htmlFor="age">Age</label>
-                <input {...register('age')} name="age" />
+                <label htmlFor={ageId}>Age</label>
+                <input {...register('age')} name="age" id={ageId} />
                 {errors.age && (
                   <p className={styleErrorMessage}>{errors.age?.message}</p>
                 )}
               </div>
 
               <div className="sm:col-span-4">
-                <label htmlFor="email">E-mail</label>
-                <input {...register('email')} name="email" />
+                <label htmlFor={emailId}>E-mail</label>
+                <input {...register('email')} name="email" id={emailId} />
                 {errors.email && (
                   <p className={styleErrorMessage}>{errors.email?.message}</p>
                 )}
               </div>
 
               <div className="sm:col-span-3">
-                <label htmlFor="passwordFirst">Password</label>
-                <input {...register('password')} name="password" />
+                <label htmlFor={passwordId}>Password</label>
+                <input
+                  {...register('password')}
+                  name="password"
+                  id={passwordId}
+                />
                 {password && <StrengthPassword password={password} />}
                 {errors.password && (
                   <p className={styleErrorMessage}>
@@ -142,10 +171,11 @@ const HookForm = () => {
               </div>
 
               <div className="sm:col-span-3">
-                <label htmlFor="passwordSecond">Password</label>
+                <label htmlFor={confirmPasswordId}>Password</label>
                 <input
                   {...register('confirmPassword')}
                   name="confirmPassword"
+                  id={confirmPasswordId}
                 />
                 {errors.confirmPassword && (
                   <p className={styleErrorMessage}>
@@ -161,39 +191,43 @@ const HookForm = () => {
                     <div className="flex gap-4">
                       <div>
                         <input
-                          // {...register('gender')}
-                          id="maleRadio"
+                          {...register('gender')}
+                          value="male"
+                          id={maleId}
                           type="radio"
-                          name="maleRadio"
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-600"
+                          name="gender"
+                          className="h-4 w-4 text-indigo-600 focus:ring-transparent ring-transparent"
                         />
-                        <label htmlFor="maleRadio">Male</label>
+                        <label htmlFor={maleId}>Male</label>
                       </div>
 
                       <div>
                         <input
-                          // {...register('gender')}
-                          id="femaleRadio"
+                          {...register('gender')}
+                          value="female"
+                          id={femaleId}
                           type="radio"
-                          name="femaleRadio"
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-600"
+                          name="gender"
+                          className="h-4 w-4 text-indigo-600 focus:ring-transparent ring-transparent"
                         />
-                        <label htmlFor="femaleRadio">Female</label>
+                        <label htmlFor={femaleId}>Female</label>
                       </div>
                     </div>
                   </legend>
                 </fieldset>
-                {/* {errors.gender && (
+                {errors.gender && (
                   <p className={styleErrorMessage}>{errors.gender?.message}</p>
-                )} */}
+                )}
               </div>
 
               <div className="sm:col-span-3">
-                <label htmlFor="country">Country</label>
+                <label htmlFor={countryId}>Country</label>
                 <input
                   list="countries"
                   {...register('country')}
                   autoComplete="country-name"
+                  name="country"
+                  id={countryId}
                 />
                 <datalist id="countries">
                   {countriesList.map((country, idx) => (
@@ -208,13 +242,13 @@ const HookForm = () => {
               </div>
 
               <div className="sm:col-span-5">
-                <label htmlFor="accept">
+                <label htmlFor={acceptId}>
                   Accept T&C
                   <input
                     {...register('accept')}
                     type="checkbox"
                     name="accept"
-                    id="accept"
+                    id={acceptId}
                     className={`h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600`}
                   />
                 </label>
@@ -224,13 +258,19 @@ const HookForm = () => {
               </div>
 
               <div className="sm:col-span-4">
-                <label htmlFor="picture">
+                <label htmlFor={imageId}>
                   Image
-                  <input type="file" name="picture" />
+                  <input
+                    {...register('image')}
+                    type="file"
+                    name="image"
+                    id={imageId}
+                    accept=".png, .jpg, .jpeg"
+                  />
                 </label>
-                <p className="text-xs leading-5 text-gray-600">
-                  PNG, JPEG, up to 10MB
-                </p>
+                {errors.image && (
+                  <p className={styleErrorMessage}>{errors.image?.message}</p>
+                )}
               </div>
             </div>
           </div>
@@ -253,7 +293,8 @@ const HookForm = () => {
           </button>
           <button
             type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-300 disabled:pointer-events-none"
+            disabled={!isValid}
           >
             Save
           </button>

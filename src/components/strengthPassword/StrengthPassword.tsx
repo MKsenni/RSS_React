@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { STRENGTH_PASS } from '../../data/constants';
 
 const checkStrengthPass = (password: string) => {
@@ -19,6 +20,7 @@ const checkStrengthPass = (password: string) => {
 
 const StrengthPassword = ({ password }: { password: string }) => {
   const value = checkStrengthPass(password);
+  const [, setCurrentValue] = useState(0);
   let style = '';
   switch (value) {
     case 4:
@@ -44,6 +46,7 @@ const StrengthPassword = ({ password }: { password: string }) => {
         max={4}
         step={1}
         value={value}
+        onChange={(e) => setCurrentValue(Number(e.target.value))}
         className={`${style} appearance-none h-1 w-full`}
       />
     </>
