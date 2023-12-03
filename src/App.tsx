@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './App.css';
 import { useAppSelector } from './redux/hooks';
 import Worksheet from './components/worksheet/Worksheet';
-import { Data } from './data/constants';
+import { Data } from './services/types';
 
 export default function App() {
   const data: Data[] = useAppSelector((state) => state.data.data);

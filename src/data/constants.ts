@@ -8,15 +8,3 @@ export const STRENGTH_PASS = {
   LOWERCASE: /(?=.*[a-z])/,
   SPECIAL: /(?=.*\W)/,
 };
-
-export type Data = {
-  name: string;
-  age: number;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  gender: string;
-  country: string;
-  accept: boolean;
-  image: string;
-};

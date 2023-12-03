@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Data } from '../../data/constants';
+import { Data } from '../../services/types';
 
 export interface IData {
   data: Data[];

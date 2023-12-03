@@ -14,3 +14,15 @@ export type PeopleResponse = {
 };
 
 export type Gender = 'male' | 'female';
+
+export type Data = {
+  name: string;
+  age: number;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  gender: string;
+  country: string;
+  accept: boolean;
+  image: string;
+};

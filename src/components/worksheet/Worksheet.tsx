@@ -1,4 +1,4 @@
-import { Data } from '../../data/constants';
+import { Data } from '../../services/types';
 
 const Worksheet = ({ data }: { data: Data[] }) => {
   const getImage = (base64: string) => {
