@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import searchWordReducer from './slices/searchWordSlice';
-import itemsPerPageReducer from './slices/itemsPerPageSlice';
+import countrySliceReducer from './slices/countrySlice';
 import { peopleApi } from '../services/peopleApi';
 import currentPageReducer from './slices/currentPageSlice';
 import loadingFlagsReducer from './slices/loadingFlagsSlice';
@@ -9,7 +9,7 @@ export const store = configureStore({
   reducer: {
     searchWord: searchWordReducer,
     currentPage: currentPageReducer,
-    itemsPerPage: itemsPerPageReducer,
+    countries: countrySliceReducer,
     loadingFlags: loadingFlagsReducer,
     [peopleApi.reducerPath]: peopleApi.reducer,
   },
