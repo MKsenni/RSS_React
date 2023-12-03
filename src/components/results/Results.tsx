@@ -3,7 +3,7 @@ import ListResults from './list-results/ListResults';
 import Pagination from '../pagination/Pagination';
 import { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import { updateItems } from '../../redux/slices/itemsPerPageSlice';
+import { updateItems } from '../../redux/slices/countrySlice';
 import { useGetPeopleQuery } from '../../services/peopleApi';
 import Spinner from '../spiner/Spinner';
 import { setLoadingMainPage } from '../../redux/slices/loadingFlagsSlice';

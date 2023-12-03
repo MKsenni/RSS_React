@@ -1,37 +1,99 @@
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { selectCountry } from '../../redux/slices/countrySlice';
 
-type FormData = yup.InferType<typeof schema>;
+yup.setLocale({
+  string: {
+    min: `password must be at least 6 characters`,
+  },
+});
+
+export type FormData = yup.InferType<typeof schema>;
 const schema = yup
   .object({
-    name: yup.string().strict().required(),
-    age: yup.number().positive().integer().required(),
-    email: yup.string().nullable().email(),
-    gender: yup
-      .mixed()
-      .oneOf(['male', 'female'] as const)
-      .defined()
-      .required(),
+    name: yup
+      .string()
+      .required('Required field')
+      .matches(/^[A-ZА-Я]/, 'First latter must be uppercase'),
+    age: yup
+      .number()
+      .required('Required field')
+      .typeError('Must be number')
+      .positive('Must be positive number')
+      .integer('Must be integer number'),
+    email: yup
+      .string()
+      .required('Required field')
+      .email(
+        'Enter email in format example@ex.ex without leading or trailing whitespace'
+      )
+      .matches(
+        /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
+        'Enter email in format example@ex.ex without leading or trailing whitespace'
+      ),
+    password: yup
+      .string()
+      .required('Required field')
+      .matches(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
+        'Password must contain 1 number, 1 uppercased letter, 1 lowercased letter, 1 special character'
+      )
+      .required('Required field'),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password')], 'Passwords must matches')
+      .required('Required field'),
+    // gender: yup
+    //   .mixed()
+    //   .required('Required field')
+    //   .oneOf(['male', 'female'] as const),
+    country: yup.string().required('Required field'),
+    accept: yup.boolean().required('Required field'),
   })
-  .required();
+  .required('Required field');
 
 const HookForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
-  const onSubmit = (data: FormData) => console.log(data);
+
+  const dispatch = useAppDispatch();
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    console.log(data);
+    reset();
+    dispatch(selectCountry(data.country));
+  };
 
   const navigate = useNavigate();
   const back = () => {
     navigate(-1);
   };
+
+  const countriesList = useAppSelector((state) => state.countries.countries);
+
+  // const inputs = document.querySelectorAll('input');
+  // inputs.forEach((input) => {
+  //   const name = input.getAttribute('name');
+  //   if (name) {
+  //     if (Object.keys(errors).includes(name)) {
+  //       input.className += 'ring-rose-800 focus:ring-rose-900';
+  //     }
+  //   }
+  // });
+
+  // const hasTrueValue = Object.values(errors).some((value) => value);
+  const styleErrorMessage = errors ? 'text-rose-600' : '';
+
   return (
     <>
       <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -44,29 +106,49 @@ const HookForm = () => {
               <div className="sm:col-span-3">
                 <label htmlFor="name">Name</label>
                 <input {...register('name')} name="name" />
-                <p>{errors.name?.message}</p>
+                {errors.name && (
+                  <p className={styleErrorMessage}>{errors.name?.message}</p>
+                )}
               </div>
 
               <div className="sm:col-span-3">
                 <label htmlFor="age">Age</label>
                 <input {...register('age')} name="age" />
-                <p>{errors.age?.message}</p>
+                {errors.age && (
+                  <p className={styleErrorMessage}>{errors.age?.message}</p>
+                )}
               </div>
 
               <div className="sm:col-span-4">
                 <label htmlFor="email">E-mail</label>
                 <input {...register('email')} name="email" />
-                <p>{errors.email?.message}</p>
+                {errors.email && (
+                  <p className={styleErrorMessage}>{errors.email?.message}</p>
+                )}
               </div>
 
               <div className="sm:col-span-3">
                 <label htmlFor="passwordFirst">Password</label>
-                <input type="text" name="passwordFirst" />
+                <input {...register('password')} name="password" />
+                <input type="range" min={0} max={4} step={1} />
+                {errors.password && (
+                  <p className={styleErrorMessage}>
+                    {errors.password?.message}
+                  </p>
+                )}
               </div>
 
               <div className="sm:col-span-3">
                 <label htmlFor="passwordSecond">Password</label>
-                <input type="text" name="passwordSecond" />
+                <input
+                  {...register('confirmPassword')}
+                  name="confirmPassword"
+                />
+                {errors.confirmPassword && (
+                  <p className={styleErrorMessage}>
+                    {errors.confirmPassword?.message}
+                  </p>
+                )}
               </div>
 
               <div className="sm:col-span-3">
@@ -76,20 +158,21 @@ const HookForm = () => {
                     <div className="flex gap-4">
                       <div>
                         <input
+                          // {...register('gender')}
                           id="maleRadio"
-                          {...register('gender')}
-                          name="female"
+                          type="radio"
+                          name="maleRadio"
                           className="h-4 w-4 text-indigo-600 focus:ring-indigo-600"
                         />
                         <label htmlFor="maleRadio">Male</label>
-                        <p>{errors.gender?.message}</p>
                       </div>
 
                       <div>
                         <input
+                          // {...register('gender')}
                           id="femaleRadio"
                           type="radio"
-                          name="male"
+                          name="femaleRadio"
                           className="h-4 w-4 text-indigo-600 focus:ring-indigo-600"
                         />
                         <label htmlFor="femaleRadio">Female</label>
@@ -97,23 +180,44 @@ const HookForm = () => {
                     </div>
                   </legend>
                 </fieldset>
+                {/* {errors.gender && (
+                  <p className={styleErrorMessage}>{errors.gender?.message}</p>
+                )} */}
               </div>
 
               <div className="sm:col-span-3">
                 <label htmlFor="country">Country</label>
-                <input type="text" name="country" autoComplete="country-name" />
+                <input
+                  list="countries"
+                  {...register('country')}
+                  autoComplete="country-name"
+                />
+                <datalist id="countries">
+                  {countriesList.map((country, idx) => (
+                    <option key={idx} value={country}>
+                      {country}
+                    </option>
+                  ))}
+                </datalist>
+                {errors.country && (
+                  <p className={styleErrorMessage}>{errors.country?.message}</p>
+                )}
               </div>
 
               <div className="sm:col-span-5">
                 <label htmlFor="accept">
                   Accept T&C
                   <input
+                    {...register('accept')}
                     type="checkbox"
                     name="accept"
                     id="accept"
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className={`h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600`}
                   />
                 </label>
+                {errors.accept && (
+                  <p className={styleErrorMessage}>{errors.accept?.message}</p>
+                )}
               </div>
 
               <div className="sm:col-span-4">
@@ -136,6 +240,13 @@ const HookForm = () => {
             onClick={back}
           >
             Cancel
+          </button>
+          <button
+            type="button"
+            className="text-sm font-semibold leading-6 text-gray-900"
+            onClick={() => reset()}
+          >
+            Reset
           </button>
           <button
             type="submit"
