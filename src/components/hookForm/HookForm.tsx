@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { selectCountry } from '../../redux/slices/countrySlice';
+import StrengthPassword from '../strengthPassword/StrengthPassword';
 
 yup.setLocale({
   string: {
@@ -27,25 +28,23 @@ const schema = yup
     email: yup
       .string()
       .required('Required field')
-      .email(
-        'Enter email in format example@ex.ex without leading or trailing whitespace'
-      )
+      .email('e.g. example@ex.ex without leading or trailing whitespace')
       .matches(
         /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
-        'Enter email in format example@ex.ex without leading or trailing whitespace'
+        'e.g. example@ex.ex without leading or trailing whitespace'
       ),
     password: yup
       .string()
       .required('Required field')
-      .matches(
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
-        'Password must contain 1 number, 1 uppercased letter, 1 lowercased letter, 1 special character'
-      )
-      .required('Required field'),
+      .matches(/(?=.*\d)/, 'Password must contain 1 number')
+      .matches(/(?=.*[A-Z])/, 'Password must contain 1 uppercased letter')
+      .matches(/(?=.*[a-z])/, 'Password must contain 1 lowercased letter')
+      .matches(/(?=.*\W)/, 'Password must contain 1 special character')
+      .min(6, `Password must be at least 6 characters`),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('password')], 'Passwords must matches')
-      .required('Required field'),
+      .required('Required field')
+      .oneOf([yup.ref('password')], 'Passwords must matches'),
     // gender: yup
     //   .mixed()
     //   .required('Required field')
@@ -56,15 +55,19 @@ const schema = yup
   .required('Required field');
 
 const HookForm = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: 'onChange',
   });
+
+  const password = watch('password');
 
   const dispatch = useAppDispatch();
 
@@ -72,9 +75,9 @@ const HookForm = () => {
     console.log(data);
     reset();
     dispatch(selectCountry(data.country));
+    navigate('/');
   };
 
-  const navigate = useNavigate();
   const back = () => {
     navigate(-1);
   };
@@ -130,7 +133,7 @@ const HookForm = () => {
               <div className="sm:col-span-3">
                 <label htmlFor="passwordFirst">Password</label>
                 <input {...register('password')} name="password" />
-                <input type="range" min={0} max={4} step={1} />
+                {password && <StrengthPassword password={password} />}
                 {errors.password && (
                   <p className={styleErrorMessage}>
                     {errors.password?.message}
