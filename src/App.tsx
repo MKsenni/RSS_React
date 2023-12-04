@@ -10,7 +10,7 @@ export default function App() {
     <>
       <Link to="useHookForm">useHookForm</Link>
       <Link to="uncontrolledElements">uncontrolledElements</Link>
-      <Worksheet data={data} />
+      {data.length && <Worksheet data={data} />}
     </>
   );
 }

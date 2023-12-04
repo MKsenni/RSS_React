@@ -1,41 +1,46 @@
 import { Data } from '../../services/types';
 
 const Worksheet = ({ data }: { data: Data[] }) => {
-  const getImage = (base64: string) => {
-    const checkBase64 = base64.match(/^data:image\/([a-zA-Z+]+);base64,/);
-    if (checkBase64 && checkBase64[1]) {
-      return checkBase64[1];
-    }
-    return null;
-  };
-
   return (
     <>
-      {data.map((item: Data, idx) => (
-        <ul
-          className={
-            idx === data.length - 1 ? 'text-pink-600' : 'text-indigo-600'
-          }
-          key={idx}
-        >
-          <li>{item.name}</li>
-          <li>{item.age}</li>
-          <li>{item.gender}</li>
-          <li>{item.email}</li>
-          <li>{item.password}</li>
-          <li>{item.confirmPassword}</li>
-          <li>{item.accept}</li>
-          <li>{item.country}</li>
-          <li>
-            <img
-              width={80}
-              height={80}
-              src={`data:image/${getImage(item.image)};base64,${item.image}`}
-              alt="your image"
-            />
-          </li>
-        </ul>
-      ))}
+      <div className="flex flex-wrap gap-5">
+        {data.map((item: Data, idx) => (
+          <ul
+            className={`${
+              idx === data.length - 1 ? 'text-pink-600' : 'text-indigo-600'
+            } border-4 rounded border-indigo-700 p-4`}
+            key={idx}
+          >
+            <li>
+              <b>Name: </b> {item.name}
+            </li>
+            <li>
+              <b>Age:</b> {item.age}
+            </li>
+            <li>
+              <b>Gender:</b> {item.gender}
+            </li>
+            <li>
+              <b>E-mail:</b> {item.email}
+            </li>
+            <li>
+              <b>Password:</b> {item.password}
+            </li>
+            <li>
+              <b>Confirm password:</b> {item.confirmPassword}
+            </li>
+            <li>
+              <b>Accept:</b> {item.accept}
+            </li>
+            <li>
+              <b>Country:</b> {item.country}
+            </li>
+            <li>
+              <img width={80} height={80} src={item.image} alt="your image" />
+            </li>
+          </ul>
+        ))}
+      </div>
     </>
   );
 };

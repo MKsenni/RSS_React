@@ -54,31 +54,36 @@ const UncontrolledForm = () => {
     setPassword(password);
   };
 
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [selectedImage, setSelectedImage] = useState('');
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.files) {
-      const file = event.target.files[0];
-      const isValid = schema.isValidSync({ image: file });
+      const file = event.target.files;
+      console.log(file);
+      const isValid = await schema.isValid({ image: file });
+      console.log(isValid);
       if (isValid) {
-        setSelectedImage(file);
+        console.log('valid image');
+        const reader = new FileReader();
+        reader.onloadend = (e) => {
+          if (e.target) {
+            const base64 = e.target.result;
+            if (typeof base64 === 'string') {
+              setSelectedImage(base64);
+            }
+          }
+        };
+        reader.readAsDataURL(file[0]);
       } else {
-        setSelectedImage(null);
+        console.log('not valid image');
+        setSelectedImage('');
       }
     }
   };
 
   const getErrorYup = (yupError: unknown) => {
-    let error: Data = {
-      name: '',
-      age: 0,
-      email: '',
-      password: '',
-      confirmPassword: '',
-      gender: '',
-      country: '',
-      accept: false,
-      image: '',
-    };
+    let error: Data = {} as Data;
     if (yupError instanceof yup.ValidationError) {
       yupError.inner.forEach((err) => {
         const path = err.path as keyof FormData;
@@ -90,44 +95,24 @@ const UncontrolledForm = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const {
-      name,
-      age,
-      email,
-      password,
-      confirmPassword,
-      gender,
-      country,
-      accept,
-      image,
-    } = refFormData;
+
     const data = {
-      name: name.current?.value || '',
-      age: Number(age.current?.value) || 0,
-      email: email.current?.value || '',
-      password: password.current?.value || '',
-      confirmPassword: confirmPassword.current?.value || '',
-      gender: gender.current?.value || '',
-      country: country.current?.value || '',
-      accept: accept.current?.checked || false,
-      image: image,
+      name: refFormData.name.current?.value || '',
+      age: Number(refFormData.age.current?.value) || 0,
+      email: refFormData.email.current?.value || '',
+      password: refFormData.password.current?.value || '',
+      confirmPassword: refFormData.confirmPassword.current?.value || '',
+      gender: refFormData.gender.current?.value || '',
+      country: refFormData.country.current?.value || '',
+      accept: refFormData.accept.current?.checked || false,
+      image: selectedImage || '',
     };
 
     try {
       await schema.validate(data, { abortEarly: false });
       console.log(data);
       dispatch(selectCountry(data.country));
-      if (selectedImage) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target) {
-            const base64 = e.target.result as string;
-            const newData = { ...data, image: base64 };
-            dispatch(loadData(newData));
-          }
-        };
-        reader.readAsDataURL(selectedImage);
-      }
+      dispatch(loadData(data));
       navigate('/');
     } catch (error) {
       const yupError = getErrorYup(error);
@@ -172,12 +157,7 @@ const UncontrolledForm = () => {
 
               <div className="sm:col-span-4">
                 <label htmlFor={emailId}>E-mail</label>
-                <input
-                  ref={refFormData.email}
-                  type="email"
-                  name="email"
-                  id={emailId}
-                />
+                <input ref={refFormData.email} name="email" id={emailId} />
                 {errors?.email && (
                   <p className={styleErrorMessage}>{errors.email}</p>
                 )}
@@ -187,10 +167,10 @@ const UncontrolledForm = () => {
                 <label htmlFor={passwordId}>Password</label>
                 <input
                   ref={refFormData.password}
-                  type="password"
                   name="password"
                   id={passwordId}
                   onChange={handleChangePassword}
+                  placeholder="password"
                 />
                 {password && <StrengthPassword password={password} />}
                 {errors?.password && (
@@ -202,9 +182,9 @@ const UncontrolledForm = () => {
                 <label htmlFor={confirmPasswordId}>Password</label>
                 <input
                   ref={refFormData.confirmPassword}
-                  type="password"
                   name="confirmPassword"
                   id={confirmPasswordId}
+                  placeholder="confirm password"
                 />
                 {errors?.confirmPassword && (
                   <p className={styleErrorMessage}>{errors.confirmPassword}</p>
@@ -289,7 +269,6 @@ const UncontrolledForm = () => {
                 <label htmlFor={imageId}>
                   Image
                   <input
-                    ref={refFormData.image}
                     type="file"
                     name="image"
                     id={imageId}
@@ -322,6 +301,7 @@ const UncontrolledForm = () => {
           <button
             type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-300 disabled:pointer-events-none"
+            // disabled={!errors}
           >
             Save
           </button>

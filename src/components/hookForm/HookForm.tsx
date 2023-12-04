@@ -26,16 +26,16 @@ const HookForm = () => {
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<FormData> = (data: FormData) => {
-    console.log(data);
-    reset();
     dispatch(selectCountry(data.country));
-
     const reader = new FileReader();
     reader.onload = (e) => {
       if (e.target) {
-        const base64 = e.target.result as string;
-        const newData = { ...data, image: base64 };
-        dispatch(loadData(newData));
+        const base64 = e.target.result;
+        if (typeof base64 === 'string') {
+          const newData = { ...data, image: base64 };
+          dispatch(loadData(newData));
+          console.log(newData);
+        }
       }
     };
     reader.readAsDataURL(data.image[0]);
@@ -102,6 +102,7 @@ const HookForm = () => {
                   {...register('password')}
                   name="password"
                   id={passwordId}
+                  placeholder="password"
                 />
                 {password && <StrengthPassword password={password} />}
                 {errors.password && (
@@ -117,6 +118,7 @@ const HookForm = () => {
                   {...register('confirmPassword')}
                   name="confirmPassword"
                   id={confirmPasswordId}
+                  placeholder="confirm password"
                 />
                 {errors.confirmPassword && (
                   <p className={styleErrorMessage}>

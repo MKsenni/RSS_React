@@ -7,6 +7,8 @@ yup.setLocale({
   },
 });
 
+const validFileExtensions = ['jpg', 'png', 'jpeg'];
+
 export type FormData = yup.InferType<typeof schema>;
 export const schema = yup
   .object({
@@ -45,16 +47,29 @@ export const schema = yup
     accept: yup.boolean().oneOf([true], 'Accept must be checked').required(),
     image: yup
       .mixed<FileList>()
+      .required('Required field')
       .test('fileType', 'Image must be jpeg, png, jpg', (value: FileList) => {
-        return (
-          (value && value[0] && value[0].type === 'image/jpeg') ||
-          value[0].type === 'image/jpg' ||
-          value[0].type === 'image/png'
-        );
+        for (const file of value) {
+          if (
+            file &&
+            !validFileExtensions.includes(file.name.split('.').pop() || '')
+          ) {
+            console.log('not valid exp');
+            return false;
+          }
+          console.log('valid exp');
+          return true;
+        }
       })
       .test('fileSize', 'Image must be less 2 Mb', (value: FileList) => {
-        return value && value[0] && value[0].size <= 2000000;
-      })
-      .required('Required field'),
+        for (const file of value) {
+          if (file && file.size >= 2000000) {
+            console.log('not valid size');
+            return false;
+          }
+          console.log('valid size');
+          return true;
+        }
+      }),
   })
   .required('Required field');
