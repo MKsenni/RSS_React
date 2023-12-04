@@ -34,7 +34,6 @@ const HookForm = () => {
         if (typeof base64 === 'string') {
           const newData = { ...data, image: base64 };
           dispatch(loadData(newData));
-          console.log(newData);
         }
       }
     };

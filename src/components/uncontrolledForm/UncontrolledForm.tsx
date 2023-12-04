@@ -54,31 +54,11 @@ const UncontrolledForm = () => {
     setPassword(password);
   };
 
-  const [selectedImage, setSelectedImage] = useState('');
-  const handleImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const [selectedImage, setSelectedImage] = useState<FileList>();
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      const file = event.target.files;
-      console.log(file);
-      const isValid = await schema.isValid({ image: file });
-      console.log(isValid);
-      if (isValid) {
-        console.log('valid image');
-        const reader = new FileReader();
-        reader.onloadend = (e) => {
-          if (e.target) {
-            const base64 = e.target.result;
-            if (typeof base64 === 'string') {
-              setSelectedImage(base64);
-            }
-          }
-        };
-        reader.readAsDataURL(file[0]);
-      } else {
-        console.log('not valid image');
-        setSelectedImage('');
-      }
+      const files = event.target.files;
+      setSelectedImage(files);
     }
   };
 
@@ -105,14 +85,23 @@ const UncontrolledForm = () => {
       gender: refFormData.gender.current?.value || '',
       country: refFormData.country.current?.value || '',
       accept: refFormData.accept.current?.checked || false,
-      image: selectedImage || '',
+      image: selectedImage,
     };
 
     try {
       await schema.validate(data, { abortEarly: false });
-      console.log(data);
       dispatch(selectCountry(data.country));
-      dispatch(loadData(data));
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target) {
+          const base64 = e.target.result;
+          if (typeof base64 === 'string') {
+            const newData = { ...data, image: base64 };
+            dispatch(loadData(newData));
+          }
+        }
+      };
+      if (data.image) reader.readAsDataURL(data.image[0]);
       navigate('/');
     } catch (error) {
       const yupError = getErrorYup(error);

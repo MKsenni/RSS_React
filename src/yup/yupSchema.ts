@@ -54,20 +54,16 @@ export const schema = yup
             file &&
             !validFileExtensions.includes(file.name.split('.').pop() || '')
           ) {
-            console.log('not valid exp');
             return false;
           }
-          console.log('valid exp');
           return true;
         }
       })
       .test('fileSize', 'Image must be less 2 Mb', (value: FileList) => {
         for (const file of value) {
-          if (file && file.size >= 2000000) {
-            console.log('not valid size');
+          if (file && file.size > 2000000) {
             return false;
           }
-          console.log('valid size');
           return true;
         }
       }),
